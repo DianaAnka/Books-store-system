@@ -31,5 +31,5 @@ mongoose.connect(
 );
 
 app.get("/api/profile", withAuth, function (req, res) {
-  res.send("Welcome back");
+  res.json({ message: "Welcome back" });
 });

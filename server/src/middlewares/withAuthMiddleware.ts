@@ -1,7 +1,7 @@
 import * as express from "express";
 import jwt from "jsonwebtoken";
+import config from "../../config";
 
-require("dotenv").config();
 interface MulterRequest extends express.Request {
   email: any;
 }
@@ -12,14 +12,14 @@ const withAuth = function (
 ) {
   const token = req.cookies.token;
   if (!token) {
-    res.status(401).send("Unauthorized: No token provided");
+    res.status(401).json({ error: "Unauthorized: No token provided" });
   } else {
     jwt.verify(
       token,
-      process.env.API_KEY as string,
+      config.API_KEY as string,
       function (err: any, decoded: any) {
         if (err) {
-          res.status(401).send("Unauthorized: Invalid token");
+          res.status(401).json({ error: "Unauthorized: Invalid token" });
         } else {
           (req as MulterRequest).email = decoded.email;
           next();

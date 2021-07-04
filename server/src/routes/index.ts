@@ -4,6 +4,7 @@ import { IUser } from "../types/user";
 import User from "../models/user";
 import { CallbackError } from "mongoose";
 import jwt from "jsonwebtoken";
+import config from "../../config";
 
 const router: Router = Router();
 
@@ -18,26 +19,34 @@ const yupObjectPassword = yup.object().shape({
 
 router.post("/api/register", function (req, res) {
   const { email, password } = req.body;
-  if (!yupObjectEmail.validate({ email: email }))
-    return res.status(400).send("Error email syntax is invalid");
-  else if (!yupObjectPassword.validate({ password: password }))
-    return res.status(400).send("Error pasword length must be between 8 & 30 ");
-  else {
-    const user = new User({ email, password });
-    User.findOne(
-      { email: user.email },
-      function (err: Error, userExisting: IUser) {
-        if (userExisting) return res.status(400).send("Error email exists");
-        user.save(function (err: CallbackError) {
-          if (err) {
-            res
-              .status(500)
-              .send("Error registering new user please try again." + err);
-          } else res.status(200).send("Welcome to the club!");
-        });
+  yupObjectEmail.validate({ email: email }).catch(function (err: Error) {
+    return res.status(400).json({ error: "Error email syntax is invalid" });
+  });
+  yupObjectPassword
+    .validate({ password: password })
+    .catch(function (err: Error) {
+      return res
+        .status(400)
+        .json({ error: "Error pasword length must be between 8 & 30 " });
+    });
+  const user = new User({ email, password });
+  User.findOne(
+    { email: user.email },
+    function (err: Error, userExisting: IUser) {
+      if (userExisting) {
+        return res.status(400).json({ error: "Error email exists" });
       }
-    );
-  }
+      user.save(function (err: CallbackError) {
+        if (err) {
+          res
+            .status(500)
+            .json({ error: "Error registering new user please try again." });
+        } else {
+          res.status(200).json({ meassage: "registration is complete" });
+        }
+      });
+    }
+  );
 });
 
 router.post("/api/login", function (req, res) {
@@ -63,7 +72,7 @@ router.post("/api/login", function (req, res) {
           });
         } else {
           const payload = { email };
-          const token = jwt.sign(payload, process.env.API_KEY as string, {
+          const token = jwt.sign(payload, config.API_KEY as string, {
             expiresIn: "1h",
           });
           res.cookie("token", token, { httpOnly: true }).sendStatus(200);
