@@ -1,7 +1,10 @@
 import { Document } from "mongoose";
 
 export interface IUser extends Document {
-  isCorrectPassword(password: any, arg1: (err: Error, same: any) => void): any;
+  isCorrectPassword(
+    password: string,
+    arg1: (err: Error, same: boolean) => void
+  ): any;
   name: string;
   email: string;
   password: string;

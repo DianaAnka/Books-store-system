@@ -8,8 +8,6 @@ import config from "../../config";
 
 const router: Router = Router();
 
-require("dotenv").config();
-
 const yupObjectEmail = yup.object().shape({
   email: yup.string().email().required(),
 });

@@ -159,7 +159,7 @@ const Register = () => {
           type: "loginFailed",
           payload: "Incorrect email or password",
         });
-        console.error("There was an error!", error);
+        console.log("There was an error!", error);
       });
   };
 

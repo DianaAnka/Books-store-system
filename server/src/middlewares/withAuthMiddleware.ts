@@ -1,10 +1,7 @@
 import * as express from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import config from "../../config";
 
-interface MulterRequest extends express.Request {
-  email: any;
-}
 const withAuth = function (
   req: express.Request,
   res: express.Response,
@@ -17,11 +14,11 @@ const withAuth = function (
     jwt.verify(
       token,
       config.API_KEY as string,
-      function (err: any, decoded: any) {
+      (err: VerifyErrors | null, decoded?: JwtPayload) => {
         if (err) {
           res.status(401).json({ error: "Unauthorized: Invalid token" });
         } else {
-          (req as MulterRequest).email = decoded.email;
+          if (decoded) req.email = decoded.email;
           next();
         }
       }
