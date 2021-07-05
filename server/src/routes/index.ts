@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Response } from "express";
 import * as yup from "yup";
 import { IUser } from "../types/user";
 import User from "../models/user";
@@ -15,18 +15,7 @@ const yupObjectPassword = yup.object().shape({
   password: yup.string().required().min(8).max(30),
 });
 
-router.post("/api/register", function (req, res) {
-  const { email, password } = req.body;
-  yupObjectEmail.validate({ email: email }).catch(function (err: Error) {
-    return res.status(400).json({ error: "Error email syntax is invalid" });
-  });
-  yupObjectPassword
-    .validate({ password: password })
-    .catch(function (err: Error) {
-      return res
-        .status(400)
-        .json({ error: "Error pasword length must be between 8 & 30 " });
-    });
+function addNewUser(res: Response, email: string, password: string) {
   const user = new User({ email, password });
   User.findOne(
     { email: user.email },
@@ -45,6 +34,25 @@ router.post("/api/register", function (req, res) {
       });
     }
   );
+}
+
+router.post("/api/register", function (req, res) {
+  const userValidation: boolean = true;
+  const { email, password } = req.body;
+  yupObjectEmail
+    .validate({ email: email })
+    //  .then(() => addNewUser(res, email, password))
+    .catch(function (err: Error) {
+      return res.status(400).json({ error: "Error email syntax is invalid" });
+    });
+  yupObjectPassword
+    .validate({ password: password })
+    .then(() => addNewUser(res, email, password))
+    .catch(function (err: Error) {
+      return res
+        .status(400)
+        .json({ error: "Error pasword length must be between 8 & 30 " });
+    });
 });
 
 router.post("/api/login", function (req, res) {
