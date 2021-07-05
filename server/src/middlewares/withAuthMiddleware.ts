@@ -1,9 +1,10 @@
 import * as express from "express";
+import * as e from "./custom";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import config from "../../config";
 
 const withAuth = function (
-  req: express.Request,
+  req: e.Express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
