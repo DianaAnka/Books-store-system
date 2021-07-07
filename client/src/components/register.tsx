@@ -8,6 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,7 +100,8 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const Register = () => {
+const Register = (props: any) => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -129,8 +131,7 @@ const Register = () => {
     if (password.length >= 8 && password.length <= 30) return true;
     return false;
   }
-
-  const handleLogin = () => {
+  const handleRegister = () => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -144,28 +145,29 @@ const Register = () => {
         const data = isJson && (await response.json());
         // check for error response
         if (!response.ok) {
-          console.log("not ok ");
           // get error message from body or default to response status
-          const error = (data && data.message) || response.status;
+          const error = data.error;
           return Promise.reject(error);
         }
         dispatch({
           type: "loginSuccess",
           payload: "Login Successfully",
         });
+        enqueueSnackbar("Registering is complete, you can Log in");
+        props.history.push("/login");
       })
       .catch((error) => {
         dispatch({
           type: "loginFailed",
           payload: "Incorrect email or password",
         });
-        console.log("There was an error!", error);
+        enqueueSnackbar(error);
       });
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.keyCode === 13 || event.which === 13) {
-      state.isButtonDisabled || handleLogin();
+      state.isButtonDisabled || handleRegister();
     }
   };
 
@@ -232,7 +234,7 @@ const Register = () => {
             size="large"
             color="secondary"
             className={classes.loginBtn}
-            onClick={handleLogin}
+            onClick={handleRegister}
             disabled={state.isButtonDisabled}
           >
             Register
@@ -243,8 +245,6 @@ const Register = () => {
               variant="contained"
               color="secondary"
               className={classes.loginBtn}
-              // onClick={handleLogin}
-              // disabled={state.isButtonDisabled}
             >
               Login
             </Button>
