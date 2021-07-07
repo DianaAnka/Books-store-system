@@ -43,7 +43,6 @@ type State = {
   email: string;
   password: string;
   isButtonDisabled: boolean;
-  helperText: string;
   isError: boolean;
 };
 
@@ -51,7 +50,6 @@ const initialState: State = {
   email: "",
   password: "",
   isButtonDisabled: true,
-  helperText: "",
   isError: false,
 };
 
@@ -59,8 +57,8 @@ type Action =
   | { type: "setEmail"; payload: string }
   | { type: "setPassword"; payload: string }
   | { type: "setIsButtonDisabled"; payload: boolean }
-  | { type: "loginSuccess"; payload: string }
-  | { type: "loginFailed"; payload: string }
+  | { type: "registerSuccess"; payload: string }
+  | { type: "registerFailed"; payload: string }
   | { type: "setIsError"; payload: boolean };
 
 const reducer = (state: State, action: Action): State => {
@@ -80,16 +78,14 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         isButtonDisabled: action.payload,
       };
-    case "loginSuccess":
+    case "registerSuccess":
       return {
         ...state,
-        helperText: action.payload,
         isError: false,
       };
-    case "loginFailed":
+    case "registerFailed":
       return {
         ...state,
-        helperText: action.payload,
         isError: true,
       };
     case "setIsError":
@@ -106,7 +102,7 @@ const Register = (props: any) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (state.email.trim() && state.password.trim()) {
+    if (validateEmail(state.email) && validatePassword(state.password)) {
       dispatch({
         type: "setIsButtonDisabled",
         payload: false,
@@ -119,14 +115,12 @@ const Register = (props: any) => {
     }
   }, [state.email, state.password]);
 
-  //to check if email syntax is valid
   function validateEmail(email: string) {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
 
-  //to check password length
   function validatePassword(password: string) {
     if (password.length >= 8 && password.length <= 30) return true;
     return false;
@@ -150,16 +144,16 @@ const Register = (props: any) => {
           return Promise.reject(error);
         }
         dispatch({
-          type: "loginSuccess",
-          payload: "Login Successfully",
+          type: "registerSuccess",
+          payload: "register Successfully",
         });
         enqueueSnackbar("Registering is complete, you can Log in");
         props.history.push("/login");
       })
       .catch((error) => {
         dispatch({
-          type: "loginFailed",
-          payload: "Incorrect email or password",
+          type: "registerFailed",
+          payload: "Email exists",
         });
         enqueueSnackbar(error);
       });
