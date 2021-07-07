@@ -8,6 +8,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
+import useStore from "../store";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,7 +101,9 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const Login = () => {
+const Login = (props: any) => {
+  const store = useStore((state) => state);
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -118,17 +122,42 @@ const Login = () => {
   }, [state.email, state.password]);
 
   const handleLogin = () => {
-    if (state.email === "abc@email.com" && state.password === "password") {
-      dispatch({
-        type: "loginSuccess",
-        payload: "Login Successfully",
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: state.email, password: state.password }),
+    };
+    fetch("/api/login", requestOptions)
+      .then(async (response) => {
+        const isJson = response.headers
+          .get("content-type")
+          ?.includes("application/json");
+        const data = isJson && (await response.json());
+        // check for error response
+        if (!response.ok) {
+          // get error message from body or default to response status
+          const error = data.error;
+          return Promise.reject(error);
+        }
+        dispatch({
+          type: "loginSuccess",
+          payload: "Login Successfully",
+        });
+        enqueueSnackbar("Login is complete, welcome back");
+        store.setUser({
+          email: state.email,
+          password: state.password,
+          isLogged: true,
+        });
+        props.history.push("/homePage");
+      })
+      .catch((error) => {
+        dispatch({
+          type: "loginFailed",
+          payload: error,
+        });
+        enqueueSnackbar(error);
       });
-    } else {
-      dispatch({
-        type: "loginFailed",
-        payload: "Incorrect email or password",
-      });
-    }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -170,7 +199,6 @@ const Login = () => {
               margin="normal"
               onChange={handleEmailChange}
               onKeyPress={handleKeyPress}
-              helperText={state.isError ? "enter valid email" : ""}
             />
             <TextField
               error={state.isError}
@@ -183,25 +211,11 @@ const Login = () => {
               // helperText={state.helperText}
               onChange={handlePasswordChange}
               onKeyPress={handleKeyPress}
-              helperText={
-                state.isError
-                  ? "password must be between 8 - 30 characters"
-                  : ""
-              }
+              helperText={state.helperText}
             />
           </div>
         </CardContent>
         <CardActions>
-          <Button
-            variant="contained"
-            size="large"
-            color="secondary"
-            className={classes.loginBtn}
-            onClick={handleLogin}
-            disabled={state.isButtonDisabled}
-          >
-            Login
-          </Button>
           <Link className={classes.link} to="/register">
             <Button
               variant="contained"
@@ -214,6 +228,16 @@ const Login = () => {
               Register
             </Button>
           </Link>
+          <Button
+            variant="contained"
+            size="large"
+            color="secondary"
+            className={classes.loginBtn}
+            onClick={handleLogin}
+            disabled={state.isButtonDisabled}
+          >
+            Login
+          </Button>
         </CardActions>
       </Card>
     </form>
