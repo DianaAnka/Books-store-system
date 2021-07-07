@@ -39,12 +39,9 @@ function addNewUser(res: Response, email: string, password: string) {
 router.post("/api/register", function (req, res) {
   const userValidation: boolean = true;
   const { email, password } = req.body;
-  yupObjectEmail
-    .validate({ email: email })
-    //  .then(() => addNewUser(res, email, password))
-    .catch(function (err: Error) {
-      return res.status(400).json({ error: "Error email syntax is invalid" });
-    });
+  yupObjectEmail.validate({ email: email }).catch(function (err: Error) {
+    return res.status(400).json({ error: "Error email syntax is invalid" });
+  });
   yupObjectPassword
     .validate({ password: password })
     .then(() => addNewUser(res, email, password))
