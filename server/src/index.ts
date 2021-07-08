@@ -5,12 +5,14 @@ import mongoose from "mongoose";
 import withAuth from "./middlewares/withAuthMiddleware";
 
 import cookieParser from "cookie-parser";
-import router from "./routes";
+import router from "./routes/AuthRoute";
+import booksRoute from "./routes/BooksRoute";
 
 const app = express();
 app.use(json());
 app.use(cookieParser());
 app.use("/", router);
+app.use("/", booksRoute);
 mongoose.connect(
   "mongodb://localhost:27017/bss",
   {
