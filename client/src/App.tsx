@@ -12,7 +12,9 @@ import useStore from "./store";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
-      marginTop: 20,
+      paddingTop: 20,
+      background: "lavender",
+      paddingBottom: 20,
     },
     loginButton: {
       position: "absolute",
@@ -25,6 +27,13 @@ const useStyles = makeStyles((theme: Theme) =>
     email: {
       position: "absolute",
       left: 20,
+    },
+    websiteName: {
+      right: 20,
+      position: "absolute",
+      textDecoration: "none",
+      fontSize: 30,
+      fontWeight: "bold",
     },
   })
 );
@@ -58,14 +67,13 @@ function App() {
             type="search"
             variant="outlined"
           />
+          <Link className={classes.websiteName} to="/homePage">
+            BSS
+          </Link>
         </div>
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/homePage" component={HomePage} />
-        {/* <div>
-          The user is <b>{store.user?.isLogged ? "currently" : "not"}</b> logged
-          in.
-        </div> */}
       </div>
     </Router>
   );
