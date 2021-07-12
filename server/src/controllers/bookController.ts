@@ -44,8 +44,7 @@ export async function getBooks(req: e.Express.Request, res: Response) {
     const count = await Book.countDocuments();
     res.json({
       books,
-      totalPages: Math.ceil(count / limit),
-      // currentPage: page,
+      totalPages: Math.ceil(count / limit)
     });
   } catch (err: any) {
     console.error(err.message);
