@@ -1,13 +1,9 @@
 import React from "react";
+import { UserProps } from "../type";
 
-type Props = UserProps 
-// & {
-//   updateUser: (user: IUser) => void;
-//   deleteUser: (_id: string) => void;
-// };
+type Props = UserProps;
 
 const User: React.FC<Props> = ({ user }) => {
-  //   const checkUser: string = user.status ? `line-through` : ""
   return (
     <div className="Card">
       <div className="Card--text">
@@ -15,13 +11,6 @@ const User: React.FC<Props> = ({ user }) => {
         <span>{user.email}</span>
       </div>
       <div className="Card--button">
-        {/* <button onClick={() => updateUser(user)}>Complete</button>
-        <button
-          onClick={() => deleteUser(user._id)}
-          className="Card--button__delete"
-        >
-          Delete
-        </button> */}
       </div>
     </div>
   );

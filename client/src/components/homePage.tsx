@@ -3,8 +3,8 @@ import Pagination from "@material-ui/lab/Pagination";
 import { getBooks } from "../services/BooksService";
 import { AxiosResponse } from "axios";
 import BookCard from "./bookCard";
-import { IBook } from "../models/book";
 import { makeStyles } from "@material-ui/core";
+import { IBook } from "../type";
 
 const useStyles = makeStyles({
   paginatore: {
@@ -21,7 +21,6 @@ const useStyles = makeStyles({
     listStyleType: "none",
   },
   item: {
-    marginTop: "10px",
     height: "100%",
     width: "100%",
   },
@@ -55,7 +54,7 @@ const HomePage = () => {
   };
   const handlePageSizeChange = (event: any) => {
     setPageSize(event.target?.value);
-    setPage(1);
+   // setPage(1);
   };
   return (
     <div>

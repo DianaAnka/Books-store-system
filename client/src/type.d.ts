@@ -13,10 +13,20 @@ interface IUser {
 interface UserProps {
   user: IUser;
 }
+export interface IBook {
+  title: string;
+  author: string;
+  tags: [string];
+}
 
 type ApiDataType = {
   message: string;
   status: string;
   users: IUser[];
   user?: IUser;
+};
+
+type BooksApiDataType = {
+  books: [IBook];
+  totalPages: number;
 };

@@ -1,11 +1,12 @@
 import axios, { AxiosResponse } from "axios";
+import { BooksApiDataType } from "../type";
 
 export const getBooks = async (params: {
   page: number;
   limit: number;
-}): Promise<AxiosResponse<ApiDataType>> => {
+}): Promise<AxiosResponse<BooksApiDataType>> => {
   try {
-    const books: AxiosResponse<ApiDataType> = await axios.get("/books", {
+    const books: AxiosResponse<BooksApiDataType> = await axios.get("/books", {
       params,
     });
     return books;

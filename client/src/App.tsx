@@ -1,6 +1,11 @@
 import React from "react";
 import "./App.css";
-import { Route, BrowserRouter as Router, Link } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import Login from "./components/login";
 import Register from "./components/register";
 import HomePage from "./components/homePage";
@@ -74,6 +79,9 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/homePage" component={HomePage} />
+        <Route exact path="/">
+          <Redirect to="/homePage" />
+        </Route>
       </div>
     </Router>
   );
