@@ -1,19 +1,13 @@
-import { Router, Response } from "express";
+import { Response } from "express";
 import { CallbackError } from "mongoose";
-import * as yup from "yup";
 import Book from "../models/book";
 import { IBook } from "../types/book";
-import * as e from "./bookCustom";
-
-const yupObject = yup.object().shape({
-  author: yup.string().required(),
-  title: yup.string().required(),
-  userId: yup.string().required(),
-});
+import * as e from "../customTypes/bookReqCustom";
+import * as validate from "../validation/bookValidation";
 
 export function addBook(req: e.Express.Request, res: Response) {
   const { author, title, userId } = req.body;
-  yupObject
+  validate.default
     .validate({ author, title, userId })
     .then(() => {
       const book = new Book({ author, title, userId });
@@ -44,7 +38,7 @@ export async function getBooks(req: e.Express.Request, res: Response) {
     const count = await Book.countDocuments();
     res.json({
       books,
-      totalPages: Math.ceil(count / limit)
+      totalPages: Math.ceil(count / limit),
     });
   } catch (err: any) {
     console.error(err.message);

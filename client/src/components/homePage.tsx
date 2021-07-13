@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
-import { getBooks } from "../services/BooksService";
+import { getBooks } from "../services/booksService";
 import { AxiosResponse } from "axios";
 import BookCard from "./bookCard";
 import { makeStyles } from "@material-ui/core";

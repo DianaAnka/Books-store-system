@@ -5,8 +5,8 @@ import mongoose from "mongoose";
 import withAuth from "./middlewares/withAuthMiddleware";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import router from "./routes/AuthRoute";
-import booksRoute from "./routes/BooksRoute";
+import router from "./routes/authRoute";
+import booksRoute from "./routes/booksRoute";
 
 const app = express();
 app.use(json());

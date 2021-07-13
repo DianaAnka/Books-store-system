@@ -1,16 +1,11 @@
 import { Response } from "express";
-import * as yup from "yup";
 import { IUser } from "../types/user";
 import User from "../models/user";
 import { CallbackError } from "mongoose";
-import * as e from "../middlewares/custom";
+import * as e from "../customTypes/authReaCustom";
 import jwt from "jsonwebtoken";
 import config from "../../config";
-
-const yupObject = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required().min(8).max(30),
-});
+import * as validate from "../validation/authValidation";
 
 function addNewUser(res: Response, email: string, password: string) {
   const user = new User({ email, password });
@@ -35,7 +30,7 @@ function addNewUser(res: Response, email: string, password: string) {
 
 export function register(req: e.Express.Request, res: Response) {
   const { email, password } = req.body;
-  yupObject
+  validate.default
     .validate({ email: email, password: password })
     .then(() => addNewUser(res, email, password))
     .catch(function (err: Error) {

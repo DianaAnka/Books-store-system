@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as e from "./custom";
+import * as e from "../customTypes/authReaCustom";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import config from "../../config";
 
