@@ -44,3 +44,34 @@ export async function getBooks(req: e.Express.Request, res: Response) {
     console.error(err.message);
   }
 }
+
+export async function searchBooks(req: e.Express.Request, res: Response) {
+  const { page = 1, limit = 10, searchQuery } = req.query;
+  try {
+    const books = await Book.find({
+      $or: [
+        { title: searchQuery },
+        { author: searchQuery },
+        { abstract: searchQuery },
+      ],
+    })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+    const count = (
+      await Book.find({
+        $or: [
+          { title: searchQuery },
+          { author: searchQuery },
+          { abstract: searchQuery },
+        ],
+      })
+    ).length;
+    res.json({
+      books,
+      totalPages: Math.ceil(count / limit),
+    });
+  } catch (err: any) {
+    console.error(err.message);
+  }
+}

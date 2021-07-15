@@ -10,7 +10,6 @@ import Login from "./components/login";
 import Register from "./components/register";
 import HomePage from "./components/homePage";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import useStore from "./store";
 
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
     header: {
       paddingTop: 20,
       background: "lavender",
-      paddingBottom: 20,
+      paddingBottom: 50,
     },
     loginButton: {
       position: "absolute",
@@ -66,12 +65,6 @@ function App() {
               </Button>
             )}
           </div>
-          <TextField
-            id="outlined-search"
-            label="Search field"
-            type="search"
-            variant="outlined"
-          />
           <Link className={classes.websiteName} to="/homePage">
             BSS
           </Link>

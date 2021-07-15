@@ -6,5 +6,6 @@ export namespace Express {
     title?: string;
     userId?: string;
     query: any;
+    searchQuery?: string;
   }
 }

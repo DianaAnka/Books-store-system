@@ -7,4 +7,6 @@ booksRoute.get("/books", bookController.getBooks);
 
 booksRoute.post("/addBook", bookController.addBook);
 
+booksRoute.get("/searchBooks", bookController.searchBooks);
+
 export default booksRoute;
