@@ -41,7 +41,7 @@ export async function getBooks(req: e.Express.Request, res: Response) {
       totalPages: Math.ceil(count / limit),
     });
   } catch (err: any) {
-    console.error(err.message);
+    console.log(err.message);
   }
 }
 
@@ -72,6 +72,6 @@ export async function searchBooks(req: e.Express.Request, res: Response) {
       totalPages: Math.ceil(count / limit),
     });
   } catch (err: any) {
-    console.error(err.message);
+    console.log(err.message);
   }
 }

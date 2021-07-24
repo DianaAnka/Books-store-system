@@ -1,11 +1,10 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import { getBooks, getSearchedBooks } from "../services/booksService";
 import { AxiosResponse } from "axios";
 import BookCard from "./bookCard";
 import { makeStyles } from "@material-ui/core";
 import { IBook } from "../type";
-import debounce from "lodash.debounce";
 
 const useStyles = makeStyles({
   paginatore: {

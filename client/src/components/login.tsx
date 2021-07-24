@@ -132,6 +132,7 @@ const Login = (props: any) => {
         const isJson = response.headers
           .get("content-type")
           ?.includes("application/json");
+        console.log("usJson ", response);
         const data = isJson && (await response.json());
         // check for error response
         if (!response.ok) {

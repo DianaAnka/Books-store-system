@@ -30,3 +30,9 @@ type BooksApiDataType = {
   books: [IBook];
   totalPages: number;
 };
+
+type userApiDataType = {
+  userInfo: IUser;
+
+  userBooks: [IBook];
+};

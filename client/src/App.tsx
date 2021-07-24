@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import {
   Route,
@@ -12,6 +12,9 @@ import HomePage from "./components/homePage";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import useStore from "./store";
+import Profile from "./components/profile";
+import Cookies from "js-cookie";
+import UnAuthorized from "./components/unAuthorized";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,13 +48,18 @@ const useStyles = makeStyles((theme: Theme) =>
 function App() {
   const store = useStore((state) => state);
   const classes = useStyles();
+
+  useEffect(() => {
+  });
   return (
     <Router>
       <div className="App">
         <div className={classes.header}>
           <div>
             {store.user?.isLogged ? (
-              <b className={classes.email}>{store.user.email}</b>
+              <Link to="/me">
+                <b className={classes.email}>{store.user.email}</b>
+              </Link>
             ) : (
               <Button
                 className={classes.loginButton}
@@ -72,6 +80,8 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/homePage" component={HomePage} />
+        <Route path="/me" component={Profile} />
+        <Route path="/401" component={UnAuthorized} />
         <Route exact path="/">
           <Redirect to="/homePage" />
         </Route>

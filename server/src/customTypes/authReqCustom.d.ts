@@ -1,8 +1,10 @@
 export namespace Express {
   export interface Request {
-    body: any;
     cookies: any;
+    body: any;
+    header: any;
     email?: string;
     password?: string;
+    query: any;
   }
 }

@@ -2,7 +2,7 @@ import { Response } from "express";
 import { IUser } from "../types/user";
 import User from "../models/user";
 import { CallbackError } from "mongoose";
-import * as e from "../customTypes/authReaCustom";
+import * as e from "../customTypes/authReqCustom";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 import * as validate from "../validation/authValidation";
@@ -61,7 +61,7 @@ export function login(req: e.Express.Request, res: Response) {
         } else {
           const payload = { email };
           const token = jwt.sign(payload, config.API_KEY as string, {
-            expiresIn: "1h",
+            expiresIn: "24h",
           });
           res.cookie("token", token, { httpOnly: true }).sendStatus(200);
         }
