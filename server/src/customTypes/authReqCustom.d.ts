@@ -6,5 +6,6 @@ export namespace Express {
     email?: string;
     password?: string;
     query: any;
+    file?: any;
   }
 }
