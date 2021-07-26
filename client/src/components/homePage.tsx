@@ -56,7 +56,6 @@ const HomePage = () => {
     searchQuery = searchQuery.trim();
     setSearchQuery(searchQuery);
     if (!searchQuery) {
-      console.log("gg");
       retrieveBooks();
     }
   };
@@ -76,7 +75,11 @@ const HomePage = () => {
   };
 
   useEffect(getPageContent, [page, pageSize]);
-
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      searchedBooks();
+    }
+  };
   const retrieveBooks = () => {
     const params = { page: page, limit: pageSize };
 
@@ -108,6 +111,7 @@ const HomePage = () => {
           placeholder="Search"
           value={searchQuery}
           onChange={onChangeSearchQuery}
+          onKeyDown={handleKeyDown}
         />
         <button
           className={classes.searchBtn}

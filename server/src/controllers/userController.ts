@@ -35,7 +35,6 @@ export async function updateUserProfilePic(req: Request, res: Response) {
       if (userBeforeUpdate?.profilePic)
         unlink("./images/" + userBeforeUpdate?.profilePic, (err) => {
           if (err) throw err;
-          console.log("old image was deleted");
         });
       res.status(200).json({
         imageUrl: user?.profilePic,
