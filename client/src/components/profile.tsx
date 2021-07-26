@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../store";
 import { IBook, IUser, UserProps } from "../type";
-import { getUserProfile } from "../services/userService";
+import { getUserProfile, updateUserProfilePic } from "../services/userService";
 import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core";
 import BookCard from "./bookCard";
 
@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Profile: React.FC<Props> = (props: any) => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser>();
+  const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
   const [userBooks, setUserBooks] = useState<IBook[]>([]);
   const store = useStore((state) => state);
 
@@ -56,6 +57,7 @@ const Profile: React.FC<Props> = (props: any) => {
       .then((response) => {
         const data = response.data;
         setUser(data.userInfo);
+        setProfilePic(data.userInfo.profilePic);
         setUserBooks(data.userBooks);
       })
       .catch((e) => {
@@ -65,7 +67,19 @@ const Profile: React.FC<Props> = (props: any) => {
   };
   useEffect(() => getProfileInfo(), []);
   const handlePhoto = (e: any) => {
-    console.log("img ", e.target.files[0]);
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    setProfilePic(e.target.files[0]);
+    const params = { email: store.user?.email };
+    updateUserProfilePic(params, formData)
+      .then((response) => {
+        const data = response.data;
+        setProfilePic(data.imageUrl);
+      })
+      .catch((e) => {
+        console.log(e);
+        props.history.push("/401");
+      });
   };
   return (
     <div>
@@ -82,7 +96,7 @@ const Profile: React.FC<Props> = (props: any) => {
           />
         </div>
         <div className={classes.profilePicContainer}>
-          <Avatar className={classes.large} src={user?.profilePic} />
+          <img className={classes.large} src={profilePic} alt="img" />
         </div>
       </div>
       <div className={classes.booksContainer}>

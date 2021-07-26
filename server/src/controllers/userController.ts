@@ -2,8 +2,8 @@ import * as e from "../customTypes/authReqCustom";
 import User from "../models/user";
 import { Request, Response } from "express";
 import book from "../models/book";
-
-const uploadFile = require("../middlewares/uploadMiddleware");
+import uploadFile from "../middlewares/uploadMiddleware";
+import { unlink } from "fs";
 
 export async function getUser(req: e.Express.Request, res: Response) {
   const data = req.query;
@@ -20,14 +20,26 @@ export async function updateUserProfilePic(req: Request, res: Response) {
   try {
     await uploadFile(req, res);
     if (req.file == undefined) {
-      return res.status(400).json({ message: "Please upload a file!" });
+      return res.status(400).json({ message: "Please upload an image!" });
     }
     try {
       const data = req.query;
-      const user = await User.findOneAndUpdate(data, {
-        profilePic: req.file.filename,
-      }).exec();
-      res.status(200).json({ user });
+      const userBeforeUpdate = await User.findOne(data).exec();
+      const user = await User.findOneAndUpdate(
+        data,
+        {
+          profilePic: req.file.filename,
+        },
+        { new: true }
+      ).exec();
+      if (userBeforeUpdate?.profilePic)
+        unlink("./images/" + userBeforeUpdate?.profilePic, (err) => {
+          if (err) throw err;
+          console.log("old image was deleted");
+        });
+      res.status(200).json({
+        imageUrl: user?.profilePic,
+      });
     } catch (err: any) {
       res.status(400).json({ error: "Error" });
       console.log(err.message);

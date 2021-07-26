@@ -132,7 +132,6 @@ const Login = (props: any) => {
         const isJson = response.headers
           .get("content-type")
           ?.includes("application/json");
-        console.log("usJson ", response);
         const data = isJson && (await response.json());
         // check for error response
         if (!response.ok) {
@@ -209,7 +208,6 @@ const Login = (props: any) => {
               label="Password"
               placeholder="Password"
               margin="normal"
-              // helperText={state.helperText}
               onChange={handlePasswordChange}
               onKeyPress={handleKeyPress}
               helperText={state.helperText}
@@ -223,8 +221,6 @@ const Login = (props: any) => {
               size="large"
               color="secondary"
               className={classes.loginBtn}
-              // onClick={handleLogin}
-              // disabled={state.isButtonDisabled}
             >
               Register
             </Button>

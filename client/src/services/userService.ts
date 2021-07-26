@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { userApiDataType } from "../type";
+import { IUser, userApiDataType } from "../type";
 
 export const getUserProfile = async (params: {
   email?: string;
@@ -20,18 +20,18 @@ export const updateUserProfilePic = async (
   params: {
     email?: string;
   },
-  data: { profilePic: any }
-): Promise<AxiosResponse<userApiDataType>> => {
+  formData: FormData
+): Promise<AxiosResponse<any>> => {
   try {
-    const user: AxiosResponse<userApiDataType> = await axios.put(
+    const image: AxiosResponse<any> = await axios.put(
       "/updateProfile",
-      { data },
+      formData,
       {
         withCredentials: true,
         params,
       }
     );
-    return user;
+    return image;
   } catch (error: any) {
     console.log("unAuthorized");
     throw new Error(error);

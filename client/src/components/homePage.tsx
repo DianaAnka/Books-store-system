@@ -3,7 +3,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { getBooks, getSearchedBooks } from "../services/booksService";
 import { AxiosResponse } from "axios";
 import BookCard from "./bookCard";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import { IBook } from "../type";
 
 const useStyles = makeStyles({
@@ -54,10 +54,11 @@ const HomePage = () => {
   const onChangeSearchQuery = (e: any) => {
     var searchQuery = e.target.value;
     searchQuery = searchQuery.trim();
-    if (searchQuery === "") {
+    setSearchQuery(searchQuery);
+    if (!searchQuery) {
+      console.log("gg");
       retrieveBooks();
     }
-    setSearchQuery(searchQuery);
   };
   const searchedBooks = () => {
     if (!searchQuery || searchQuery.length === 0) return;
@@ -77,7 +78,6 @@ const HomePage = () => {
   useEffect(getPageContent, [page, pageSize]);
 
   const retrieveBooks = () => {
-    if (searchQuery || searchQuery.length !== 0) return;
     const params = { page: page, limit: pageSize };
 
     getBooks(params)
@@ -102,8 +102,8 @@ const HomePage = () => {
     <div>
       <h1>Books List</h1>
       <div className="input-group mb-3">
-        <input
-          type="text"
+        <TextField
+          type="search"
           className={classes.search}
           placeholder="Search"
           value={searchQuery}

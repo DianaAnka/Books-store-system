@@ -15,6 +15,7 @@ app.use(cors());
 app.use("/", router);
 app.use("/", booksRoute);
 app.use("/", userRoute);
+app.use(express.static("images"));
 mongoose.connect(
   "mongodb://localhost:27017/bss",
   {
@@ -34,4 +35,3 @@ mongoose.connect(
     }
   }
 );
-

@@ -13,8 +13,8 @@ import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import useStore from "./store";
 import Profile from "./components/profile";
-import Cookies from "js-cookie";
 import UnAuthorized from "./components/unAuthorized";
+import BookPage from "./components/bookPage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,8 +49,7 @@ function App() {
   const store = useStore((state) => state);
   const classes = useStyles();
 
-  useEffect(() => {
-  });
+  useEffect(() => {});
   return (
     <Router>
       <div className="App">
@@ -82,6 +81,7 @@ function App() {
         <Route path="/homePage" component={HomePage} />
         <Route path="/me" component={Profile} />
         <Route path="/401" component={UnAuthorized} />
+        <Route path="/bookPage" component={BookPage} />
         <Route exact path="/">
           <Redirect to="/homePage" />
         </Route>
