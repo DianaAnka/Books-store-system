@@ -3,7 +3,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import useStore from "../store";
-import { IBook } from "../type";
+import { IBook } from "../types/bookTypes";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -21,6 +21,7 @@ const BookCard = (props: IBook) => {
   const history = useHistory();
   const classes = useStyles();
   const store = useStore((state) => state);
+
   const openBookPage = (e: any) => {
     e.preventDefault();
     if (store.user?.isLogged)
@@ -31,6 +32,7 @@ const BookCard = (props: IBook) => {
         },
       });
   };
+
   return (
     <Card className={classes.root} onClick={openBookPage}>
       <CardContent>

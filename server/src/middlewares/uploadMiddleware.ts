@@ -19,5 +19,4 @@ let uploadFile = multer({
   },
 }).single("file");
 
-let uploadFileMiddleware = util.promisify(uploadFile);
-export default uploadFileMiddleware;
+export default uploadFile;

@@ -4,6 +4,7 @@ import Book from "../models/book";
 import { IBook } from "../types/book";
 import * as e from "../customTypes/bookReqCustom";
 import * as validate from "../validation/bookValidation";
+import { string } from "yup/lib/locale";
 
 export function addBook(req: e.Express.Request, res: Response) {
   const { author, title, userId } = req.body;
@@ -29,49 +30,39 @@ export function addBook(req: e.Express.Request, res: Response) {
 }
 
 export async function getBooks(req: e.Express.Request, res: Response) {
-  const { page = 1, limit = 10 } = req.query;
+  var { page = 1, limit = 20, anyField, author, title, abstract } = req.query;
+  limit = limit > 20 ? 20 : limit;
+  var searchQuery: string = "";
   try {
-    const books = await Book.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
-    const count = await Book.countDocuments();
-    res.json({
-      books,
-      totalPages: Math.ceil(count / limit),
-    });
-  } catch (err: any) {
-    console.log(err.message);
-  }
-}
+    var books: IBook[] = [];
+    var count: number = 0;
 
-export async function searchBooks(req: e.Express.Request, res: Response) {
-  const { page = 1, limit = 10, searchQuery } = req.query;
-  try {
-    const books = await Book.find({
-      $or: [
-        { title: searchQuery },
-        { author: searchQuery },
-        { abstract: searchQuery },
-      ],
-    })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
-    const count = (
-      await Book.find({
-        $or: [
-          { title: searchQuery },
-          { author: searchQuery },
-          { abstract: searchQuery },
-        ],
-      })
-    ).length;
-    res.json({
-      books,
-      totalPages: Math.ceil(count / limit),
-    });
+    if (anyField) searchQuery = anyField;
+    else {
+      if (author) searchQuery = `{author:"${author}"`;
+      if (title) searchQuery += `,title:"${title}"`;
+      if (abstract) searchQuery += `,abstract:"${abstract}"`;
+    }
+    if (searchQuery.length > 0) {
+      count = await Book.find({ $text: { $search: searchQuery } })
+        .countDocuments()
+        .exec();
+      books = await Book.find({ $text: { $search: searchQuery } })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+    } else {
+      count = await Book.find().countDocuments().exec();
+      books = await Book.find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+    }
+    res.json({ books, totalPages: Math.ceil(count / limit) });
   } catch (err: any) {
-    console.log(err.message);
+    console.log(err);
+    res.status(500).json({
+      message: err,
+    });
   }
 }

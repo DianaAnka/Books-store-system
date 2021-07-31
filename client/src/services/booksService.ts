@@ -1,33 +1,19 @@
-import axios, { AxiosResponse } from "axios";
-import { BooksApiDataType } from "../type";
+import axios from "axios";
+import { BooksApiDataType } from "../types/bookTypes";
 
 export const getBooks = async (params: {
   page: number;
   limit: number;
-}): Promise<AxiosResponse<BooksApiDataType>> => {
-  try {
-    const books: AxiosResponse<BooksApiDataType> = await axios.get("/books", {
-      params,
-    });
-    return books;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-export const getSearchedBooks = async (params: {
-  page: number;
-  limit: number;
-  searchQuery: string;
-}): Promise<AxiosResponse<BooksApiDataType>> => {
-  try {
-    const books: AxiosResponse<BooksApiDataType> = await axios.get(
-      "/searchBooks",
-      {
-        params,
-      }
-    );
-    return books;
-  } catch (error: any) {
-    throw new Error(error);
-  }
+  anyField?: string;
+  author?: string;
+  title?: string;
+  abstract?: string;
+}): Promise<BooksApiDataType> => {
+  const { data } = await axios.get("/books", {
+    params,
+  });
+  return {
+    books: data.books,
+    totalPages: data.totalPages,
+  };
 };

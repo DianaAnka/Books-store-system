@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../store";
-import { IBook, IUser, UserProps } from "../type";
+import { IBook } from "../types/bookTypes";
+import { IUser, UserProps } from "../types/userTypes";
 import { getUserProfile, updateUserProfilePic } from "../services/userService";
-import { Avatar, createStyles, makeStyles, Theme } from "@material-ui/core";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import BookCard from "./bookCard";
 
 type Props = UserProps;
@@ -65,8 +66,8 @@ const Profile: React.FC<Props> = (props: any) => {
         props.history.push("/401");
       });
   };
-  useEffect(() => getProfileInfo(), []);
-  const handlePhoto = (e: any) => {
+
+  const handleUpdateProfilePic = (e: any) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     setProfilePic(e.target.files[0]);
@@ -78,9 +79,11 @@ const Profile: React.FC<Props> = (props: any) => {
       })
       .catch((e) => {
         console.log(e);
-        props.history.push("/401");
       });
   };
+
+  useEffect(() => getProfileInfo(), []);
+
   return (
     <div>
       <div className={classes.userInfoCotainer}>
@@ -92,7 +95,7 @@ const Profile: React.FC<Props> = (props: any) => {
             type="file"
             accept=".png, .jpg, .jpeg"
             name="photo"
-            onChange={handlePhoto}
+            onChange={handleUpdateProfilePic}
           />
         </div>
         <div className={classes.profilePicContainer}>

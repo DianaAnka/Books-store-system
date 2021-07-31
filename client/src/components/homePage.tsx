@@ -1,10 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
-import { getBooks, getSearchedBooks } from "../services/booksService";
-import { AxiosResponse } from "axios";
+import { getBooks } from "../services/booksService";
 import BookCard from "./bookCard";
 import { makeStyles, TextField } from "@material-ui/core";
-import { IBook } from "../type";
+import { IBook, QueryParams } from "../types/bookTypes";
+import { useDebounce } from "use-debounce";
 
 const useStyles = makeStyles({
   paginatore: {
@@ -25,8 +25,9 @@ const useStyles = makeStyles({
     width: "100%",
   },
   search: {
-    width: "20%",
+    width: "10%",
     height: 40,
+    padding: 10,
   },
   searchBtn: {
     display: "inline",
@@ -42,57 +43,18 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [pageSize, setPageSize] = useState(3);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [queryIsChanged, setQueryIsChanged] = useState(false);
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    author: "",
+    title: "",
+    abstract: "",
+  });
+  const [anyField, setAnyField] = useState("");
 
   const pageSizes = [3, 6, 9];
 
-  const getPageContent = () => {
-    if (!searchQuery || searchQuery.length === 0) retrieveBooks();
-    else searchedBooks();
-  };
-
-  const onChangeSearchQuery = (e: any) => {
-    var searchQuery = e.target.value;
-    searchQuery = searchQuery.trim();
-    setSearchQuery(searchQuery);
-    if (!searchQuery) {
-      retrieveBooks();
-    }
-  };
-  const searchedBooks = () => {
-    if (!searchQuery || searchQuery.length === 0) return;
-    const params = { page: page, limit: pageSize, searchQuery: searchQuery };
-
-    getSearchedBooks(params)
-      .then((response) => {
-        const { books, totalPages } = response.data;
-        setBooks(books);
-        setCount(totalPages);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  useEffect(getPageContent, [page, pageSize]);
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter") {
-      searchedBooks();
-    }
-  };
-  const retrieveBooks = () => {
-    const params = { page: page, limit: pageSize };
-
-    getBooks(params)
-      .then((response: AxiosResponse) => {
-        const { books, totalPages } = response.data;
-        setBooks(books);
-        setCount(totalPages);
-      })
-      .catch((e: Error) => {
-        throw e;
-      });
-  };
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -101,6 +63,42 @@ const HomePage = () => {
     setPageSize(event.target?.value);
     setPage(1);
   };
+  const buildSearchQuery = () => {
+    setQueryIsChanged(!queryIsChanged);
+  };
+  useEffect(() => {
+    const params = {
+      page: page,
+      limit: pageSize,
+      anyField: anyField,
+      author: queryParams?.author,
+      title: queryParams?.title,
+      abstract: queryParams?.abstract,
+    };
+    (async () => {
+      try {
+        setIsError(false);
+        const { books, totalPages } = await getBooks(params);
+        setBooks(books);
+        setCount(totalPages);
+      } catch (e) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [page, pageSize, queryIsChanged]);
+
+  useEffect(() => {
+    if (
+      queryParams.author?.length == 0 &&
+      queryParams.title?.length == 0 &&
+      queryParams.abstract?.length == 0 &&
+      anyField.length == 0
+    )
+      setQueryIsChanged(!queryIsChanged);
+  }, [queryParams, anyField]);
+
   return (
     <div>
       <h1>Books List</h1>
@@ -108,15 +106,55 @@ const HomePage = () => {
         <TextField
           type="search"
           className={classes.search}
-          placeholder="Search"
-          value={searchQuery}
-          onChange={onChangeSearchQuery}
-          onKeyDown={handleKeyDown}
+          placeholder="Any Field"
+          value={anyField}
+          onChange={({ target }) =>
+            setAnyField(target.value.trim().toLowerCase())
+          }
+        />
+        <TextField
+          type="search"
+          className={classes.search}
+          placeholder="Author"
+          value={queryParams?.author}
+          disabled={anyField ? true : false}
+          onChange={({ target }) =>
+            setQueryParams({
+              ...queryParams,
+              author: target.value.trim().toLowerCase(),
+            })
+          }
+        />
+        <TextField
+          type="search"
+          className={classes.search}
+          placeholder="Title"
+          value={queryParams?.title}
+          disabled={anyField ? true : false}
+          onChange={({ target }) =>
+            setQueryParams({
+              ...queryParams,
+              title: target.value.trim().toLowerCase(),
+            })
+          }
+        />
+        <TextField
+          type="search"
+          className={classes.search}
+          placeholder="Abstract"
+          value={queryParams?.abstract}
+          disabled={anyField ? true : false}
+          onChange={({ target }) =>
+            setQueryParams({
+              ...queryParams,
+              abstract: target.value.trim().toLowerCase(),
+            })
+          }
         />
         <button
           className={classes.searchBtn}
           type="button"
-          onClick={searchedBooks}
+          onClick={buildSearchQuery}
         >
           Search
         </button>

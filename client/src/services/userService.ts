@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { userApiDataType } from "../type";
+import { userApiDataType } from "../types/userTypes";
 
 export const getUserProfile = async (params: {
   email?: string;

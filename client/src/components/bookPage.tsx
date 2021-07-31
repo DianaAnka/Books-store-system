@@ -12,8 +12,10 @@ const useStyles = makeStyles({
 });
 
 const BookPage = (props: any) => {
+  
   const data = props.location.state.data;
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <h1>Title: {data.title}</h1>

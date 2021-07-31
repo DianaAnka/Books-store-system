@@ -48,5 +48,5 @@ const bookSchema: Schema = new Schema(
   },
   { timestamps: true }
 );
-
+bookSchema.index({ author: "text", title: "text", abstract: "text" });
 export default model<IBook>("Book", bookSchema);

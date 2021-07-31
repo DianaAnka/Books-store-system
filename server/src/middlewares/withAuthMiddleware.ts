@@ -20,7 +20,11 @@ const withAuth = function (
           console.log(err.message);
           res.status(401).json({ error: "Unauthorized: Invalid token" });
         } else {
-          if (decoded) req.email = decoded.email;
+          if (decoded) {
+            if (req.query.email != decoded.email)
+              res.status(403).json({ error: "Forbidden" });
+            else req.email = decoded.email;
+          }
           next();
         }
       }
