@@ -69,3 +69,42 @@ export function login(req: e.Express.Request, res: Response) {
     }
   });
 }
+
+export function isLoggedIn(req: e.Express.Request, res: Response) {
+  const email  = req.email;
+  User.findOne({ email }, function (err: Error, user: IUser) {
+    if (err) {
+      res.status(500).json({
+        error: "Internal error please try again",
+      });
+    } else if (!user) {
+      res.status(401).json({
+        error: "Not logged in",
+      });
+    } else {
+      res.status(200).json({ message: "Logged " });
+    }
+  });
+}
+
+export function logOut(req: e.Express.Request, res: Response) {
+  const  email  = req.email;
+  User.findOne({ email }, function (err: Error, user: IUser) {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again",
+      });
+    } else if (!user) {
+      res.status(401).json({
+        error: "Not logged in",
+      });
+    } else {
+      const payload = { email };
+      const token = jwt.sign(payload, config.API_KEY as string, {
+        expiresIn: "1",
+      });
+      res.cookie("token", token, { httpOnly: true }).sendStatus(200);
+    }
+  });
+}

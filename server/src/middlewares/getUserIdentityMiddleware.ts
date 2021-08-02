@@ -3,13 +3,12 @@ import * as e from "../customTypes/authReqCustom";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import config from "../../config";
 
-const withAuth = function (
+const getUserIdentity = function (
   req: e.Express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
   const token = req.cookies.token;
-  const { email } = req.method == "PUT" ? req.body : req.query;
   if (!token) {
     res.status(401).json({ error: "Unauthorized: No token provided" });
   } else {
@@ -22,9 +21,7 @@ const withAuth = function (
           res.status(401).json({ error: "Unauthorized: Invalid token" });
         } else {
           if (decoded) {
-            if (email != decoded.email) {
-              return res.status(403).json({ error: "Forbidden" });
-            } else req.email = decoded.email;
+            req.email = decoded.email;
           }
           next();
         }
@@ -32,4 +29,4 @@ const withAuth = function (
     );
   }
 };
-export default withAuth;
+export default getUserIdentity;

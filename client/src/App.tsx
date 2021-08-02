@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import {
   Route,
@@ -15,15 +15,21 @@ import useStore from "./store";
 import Profile from "./components/profile";
 import UnAuthorized from "./components/unAuthorized";
 import BookPage from "./components/bookPage";
+import { isLogged, logout } from "./services/authenticationService";
+import AddBookFom from "./components/addBookForm";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
       paddingTop: 20,
       background: "lavender",
-      paddingBottom: 50,
+      paddingBottom: 60,
     },
     loginButton: {
+      position: "absolute",
+      left: 20,
+    },
+    logoutButton: {
       position: "absolute",
       left: 20,
     },
@@ -33,7 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     email: {
       position: "absolute",
-      left: 20,
+      left: 140,
+      fontSize: 20,
     },
     websiteName: {
       right: 20,
@@ -47,18 +54,68 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function App() {
   const store = useStore((state) => state);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const classes = useStyles();
 
-  useEffect(() => {});
+  const handleLogout = async () => {
+    try {
+      setIsError(false);
+      const user = await logout();
+      console.log(user);
+      store.setUser({
+        email: "",
+        isLogged: false,
+      });
+    } catch (e) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const params = {
+      email: window.localStorage.getItem("email") || "",
+    };
+    console.log("hello");
+    (async () => {
+      try {
+        setIsError(false);
+        const response = await isLogged();
+        console.log(response);
+        store.setUser({
+          email: window.localStorage.getItem("email") || "",
+          isLogged: true,
+        });
+        console.log("store ", store.user);
+      } catch (e) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, []);
   return (
     <Router>
       <div className="App">
         <div className={classes.header}>
           <div>
             {store.user?.isLogged ? (
-              <Link to="/me">
-                <b className={classes.email}>{store.user.email}</b>
-              </Link>
+              <>
+                <Link to="/me">
+                  <b className={classes.email}>{store.user.email}</b>
+                </Link>
+                <Button
+                  className={classes.logoutButton}
+                  variant="contained"
+                  size="large"
+                  color="secondary"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
             ) : (
               <Button
                 className={classes.loginButton}
@@ -82,6 +139,7 @@ function App() {
         <Route path="/me" component={Profile} />
         <Route path="/401" component={UnAuthorized} />
         <Route path="/bookPage" component={BookPage} />
+        <Route path="/addBook" component={AddBookFom} />
         <Route exact path="/">
           <Redirect to="/homePage" />
         </Route>

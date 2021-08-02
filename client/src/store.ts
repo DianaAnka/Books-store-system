@@ -2,7 +2,6 @@ import create from "zustand";
 
 export interface User {
   email: string;
-  password: string;
   isLogged: boolean;
   cookies?: string;
   name?: string;

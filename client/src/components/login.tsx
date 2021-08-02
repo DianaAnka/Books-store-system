@@ -145,9 +145,9 @@ const Login = (props: any) => {
         enqueueSnackbar("Login is complete, welcome back");
         store.setUser({
           email: state.email,
-          password: state.password,
           isLogged: true,
         });
+        window.localStorage.setItem("email", state.email);
         props.history.push("/homePage");
       })
       .catch((error) => {

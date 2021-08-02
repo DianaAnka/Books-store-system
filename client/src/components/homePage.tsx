@@ -4,7 +4,7 @@ import { getBooks } from "../services/booksService";
 import BookCard from "./bookCard";
 import { makeStyles, TextField } from "@material-ui/core";
 import { IBook, QueryParams } from "../types/bookTypes";
-import { useDebounce } from "use-debounce";
+import { useQuery } from 'react-query'
 
 const useStyles = makeStyles({
   paginatore: {

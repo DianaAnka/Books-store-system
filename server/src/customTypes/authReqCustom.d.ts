@@ -1,5 +1,6 @@
 export namespace Express {
   export interface Request {
+    method: any;
     cookies: any;
     body: any;
     header: any;
@@ -7,5 +8,6 @@ export namespace Express {
     password?: string;
     query: any;
     file?: any;
+    params: any;
   }
 }

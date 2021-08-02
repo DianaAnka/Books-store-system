@@ -1,13 +1,14 @@
 import axios, { AxiosResponse } from "axios";
-import { userApiDataType } from "../types/userTypes";
+import { userApiDataType, userApiProfilePic } from "../types/userTypes";
 
-export const getUserProfile = async (params: {
-  email?: string;
+export const getUserProfile = async (params:{
+  page: number;
+  limit: number;
 }): Promise<AxiosResponse<userApiDataType>> => {
   try {
     const user: AxiosResponse<userApiDataType> = await axios.get("/me", {
       withCredentials: true,
-      params,
+      params
     });
     return user;
   } catch (error: any) {
@@ -17,23 +18,16 @@ export const getUserProfile = async (params: {
 };
 
 export const updateUserProfilePic = async (
-  params: {
-    email?: string;
-  },
   formData: FormData
-): Promise<AxiosResponse<any>> => {
+): Promise<userApiProfilePic> => {
   try {
-    const image: AxiosResponse<any> = await axios.put(
-      "/updateProfile",
-      formData,
-      {
-        withCredentials: true,
-        params,
-      }
-    );
-    return image;
+    const { data } = await axios.put("/updateProfile", formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return { imageUrl: data.imageUrl };
   } catch (error: any) {
-    console.log("unAuthorized");
+    console.log(error);
     throw new Error(error);
   }
 };
