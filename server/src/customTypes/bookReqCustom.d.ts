@@ -6,6 +6,7 @@ export namespace Express {
     title?: string;
     userId?: string;
     query: any;
+    email?: any;
     searchQuery?: string;
   }
 }

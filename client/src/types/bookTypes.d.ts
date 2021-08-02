@@ -1,7 +1,9 @@
 export interface IBook {
   title: string;
   author: string;
-  tags: string[];
+  tags?: string[];
+  abstract?: string;
+  content?: string;
 }
 
 type BooksApiDataType = {

@@ -4,14 +4,17 @@ import Book from "../models/book";
 import { IBook } from "../types/book";
 import * as e from "../customTypes/bookReqCustom";
 import * as validate from "../validation/bookValidation";
-import { string } from "yup/lib/locale";
+import User from "../models/user";
 
 export function addBook(req: e.Express.Request, res: Response) {
-  const { author, title, userId } = req.body;
+  const data = req.body;
+  const email = req.email;
   validate.default
-    .validate({ author, title, userId })
-    .then(() => {
-      const book = new Book({ author, title, userId });
+    .validate(data)
+    .then(async () => {
+      const user = await User.findOne({ email: email }).exec();
+      if (!user) return res.status(400).json({ error: "User Not found" });
+      const book = new Book({ ...data, userId: user._id });
       Book.findOne(
         { author: book.author, title: book.title, userId: book.userId },
         function (err: Error, bookExisting: IBook) {

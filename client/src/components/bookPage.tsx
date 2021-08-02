@@ -12,7 +12,6 @@ const useStyles = makeStyles({
 });
 
 const BookPage = (props: any) => {
-  
   const data = props.location.state.data;
   const classes = useStyles();
 
@@ -20,6 +19,14 @@ const BookPage = (props: any) => {
     <div className={classes.root}>
       <h1>Title: {data.title}</h1>
       <h2>Author : {data.author}</h2>
+      <h4>Abstract: {data.abstract}</h4>
+      <h4>Content: {data.content}</h4>
+      <h4>
+        Tags:{" "}
+        {data.tags?.map((tag: string) => (
+          <b> {tag}</b>
+        ))}
+      </h4>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import useStore from "../store";
 
@@ -104,6 +104,7 @@ const Login = (props: any) => {
   const store = useStore((state) => state);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -148,7 +149,7 @@ const Login = (props: any) => {
           isLogged: true,
         });
         window.localStorage.setItem("email", state.email);
-        props.history.push("/homePage");
+        history.push("/homePage");
       })
       .catch((error) => {
         dispatch({

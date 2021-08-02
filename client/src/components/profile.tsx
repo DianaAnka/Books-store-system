@@ -6,6 +6,9 @@ import { getUserProfile, updateUserProfilePic } from "../services/userService";
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import BookCard from "./bookCard";
 import { Pagination } from "@material-ui/lab";
+import Button from "@material-ui/core/Button";
+import { Link, useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 type Props = UserProps;
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,6 +52,15 @@ const useStyles = makeStyles((theme: Theme) =>
       left: "50%",
       transform: "translate(-50%, 0)",
     },
+    addBookLink: {
+      textDecoration: "none",
+      color: "white",
+    },
+    addBookBtn: {
+      position: "fixed",
+      left: "22%",
+      top: "30%",
+    },
   })
 );
 
@@ -61,6 +73,8 @@ const Profile: React.FC<Props> = (props: any) => {
   const [count, setCount] = useState(0);
   const [pageSize, setPageSize] = useState(3);
   const store = useStore((state) => state);
+  const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
   const pageSizes = [3, 6, 9];
 
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
@@ -72,21 +86,6 @@ const Profile: React.FC<Props> = (props: any) => {
     setPage(1);
   };
 
-  const getProfileInfo = () => {
-    getUserProfile({ page: page, limit: pageSize })
-      .then((response) => {
-        const data = response.data;
-        setUser(data.userInfo);
-        setProfilePic(data.userInfo.profilePic);
-        setUserBooks(data.userBooks);
-        setCount(data.totalPages);
-      })
-      .catch((e) => {
-        console.log(e);
-        props.history.push("/401");
-      });
-  };
-
   const handleUpdateProfilePic = async (e: any) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
@@ -96,7 +95,24 @@ const Profile: React.FC<Props> = (props: any) => {
     setProfilePic(imageUrl);
   };
 
-  useEffect(() => getProfileInfo(), [page, pageSize]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const { userInfo, userBooks, totalPages } = await getUserProfile({
+          page: page,
+          limit: pageSize,
+        });
+        setUser(userInfo);
+        setProfilePic(userInfo.profilePic);
+        setUserBooks(userBooks);
+        setCount(totalPages);
+      } catch (e) {
+        enqueueSnackbar("Error has occured");
+        history.push("/homePage");
+      } finally {
+      }
+    })();
+  }, [page, pageSize]);
 
   return (
     <div>
@@ -111,6 +127,15 @@ const Profile: React.FC<Props> = (props: any) => {
             name="photo"
             onChange={handleUpdateProfilePic}
           />
+          <Button
+            className={classes.addBookBtn}
+            variant="contained"
+            size="large"
+          >
+            <Link className={classes.addBookLink} to="/addBook">
+              Add Book
+            </Link>
+          </Button>
         </div>
         <div className={classes.profilePicContainer}>
           <img className={classes.large} src={profilePic} alt="img" />

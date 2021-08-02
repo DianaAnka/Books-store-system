@@ -1,16 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import { userApiDataType, userApiProfilePic } from "../types/userTypes";
 
-export const getUserProfile = async (params:{
+export const getUserProfile = async (params: {
   page: number;
   limit: number;
-}): Promise<AxiosResponse<userApiDataType>> => {
+}): Promise<userApiDataType> => {
   try {
-    const user: AxiosResponse<userApiDataType> = await axios.get("/me", {
+    const { data } = await axios.get("/me", {
       withCredentials: true,
-      params
+      params,
     });
-    return user;
+    return {
+      userInfo: data.userInfo,
+      userBooks: data.userBooks,
+      totalPages: data.totalPages,
+    };
   } catch (error: any) {
     console.log("unAuthorized");
     throw new Error(error);

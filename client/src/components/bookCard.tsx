@@ -42,7 +42,10 @@ const BookCard = (props: IBook) => {
         <Typography variant="body2" color="textSecondary" component="p">
           Author : {props.author}
           <br />
-          Tags : {props.tags}
+          Tags :{" "}
+          {props.tags?.map((tag) => (
+            <b> {tag}</b>
+          ))}
         </Typography>
       </CardContent>
     </Card>

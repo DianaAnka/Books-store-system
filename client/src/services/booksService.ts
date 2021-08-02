@@ -1,5 +1,5 @@
-import axios from "axios";
-import { BooksApiDataType } from "../types/bookTypes";
+import axios, { AxiosResponse } from "axios";
+import { BooksApiDataType, IBook } from "../types/bookTypes";
 
 export const getBooks = async (params: {
   page: number;
@@ -16,4 +16,13 @@ export const getBooks = async (params: {
     books: data.books,
     totalPages: data.totalPages,
   };
+};
+
+export const addBook = async (book: IBook): Promise<AxiosResponse> => {
+  const res = await axios.post(
+    "/addBook",
+    { ...book },
+    { withCredentials: true }
+  );
+  return res;
 };
