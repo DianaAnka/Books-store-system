@@ -6,6 +6,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.46",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -23,9 +24,14 @@
     "mdbreact": "^5.1.0",
     "notistack": "^1.0.9",
     "react": "^17.0.2",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^17.0.2",
+    "react-materialui-tags": "^1.0.4",
     "react-query": "^3.19.1",
     "react-scripts": "4.0.3",
+    "react-tag-input": "^6.7.3",
+    "react-tag-input-dnd-fix": "0.0.2",
     "react-tap-event-plugin": "^3.0.3",
     "typescript": "^4.3.4",
     "use-debounce": "^7.0.0",
@@ -62,6 +68,7 @@
     "@types/js-cookie": "^2.2.7",
     "@types/lodash.debounce": "^4.0.6",
     "@types/material-ui": "^0.21.8",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "@types/react-tag-input": "^6.1.3"
   }
 }

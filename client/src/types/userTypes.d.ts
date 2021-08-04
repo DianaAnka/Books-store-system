@@ -18,6 +18,7 @@ type userApiDataType = {
   userInfo: IUser;
   userBooks: [IBook];
   totalPages: number;
+  totalCount: number;
 };
 
 type userApiProfilePic = {

@@ -14,6 +14,7 @@ export const getUserProfile = async (params: {
       userInfo: data.userInfo,
       userBooks: data.userBooks,
       totalPages: data.totalPages,
+      totalCount: data.totalCount,
     };
   } catch (error: any) {
     console.log("unAuthorized");

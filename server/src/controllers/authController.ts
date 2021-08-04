@@ -30,13 +30,14 @@ function addNewUser(res: Response, email: string, password: string) {
 
 export function register(req: e.Express.Request, res: Response) {
   const { email, password } = req.body;
-  validate.default
-    .validate({ email: email, password: password })
-    .then(() => addNewUser(res, email, password))
-    .catch(function (err: Error) {
-      return res.status(400).json({ error: err.message });
-    });
+  try {
+    validate.default.validate({ email: email, password: password });
+  } catch (err: any) {
+    return res.status(400).json({ error: err.message });
+  }
+  addNewUser(res, email, password);
 }
+
 export function login(req: e.Express.Request, res: Response) {
   const { email, password } = req.body;
   User.findOne({ email }, function (err: Error, user: IUser) {
@@ -71,7 +72,7 @@ export function login(req: e.Express.Request, res: Response) {
 }
 
 export function isLoggedIn(req: e.Express.Request, res: Response) {
-  const email  = req.email;
+  const email = req.email;
   User.findOne({ email }, function (err: Error, user: IUser) {
     if (err) {
       res.status(500).json({
@@ -88,23 +89,6 @@ export function isLoggedIn(req: e.Express.Request, res: Response) {
 }
 
 export function logOut(req: e.Express.Request, res: Response) {
-  const  email  = req.email;
-  User.findOne({ email }, function (err: Error, user: IUser) {
-    if (err) {
-      console.log(err);
-      res.status(500).json({
-        error: "Internal error please try again",
-      });
-    } else if (!user) {
-      res.status(401).json({
-        error: "Not logged in",
-      });
-    } else {
-      const payload = { email };
-      const token = jwt.sign(payload, config.API_KEY as string, {
-        expiresIn: "1",
-      });
-      res.cookie("token", token, { httpOnly: true }).sendStatus(200);
-    }
-  });
+  res.clearCookie("token")
+  res.status(200).json({ message: "Logout " });
 }

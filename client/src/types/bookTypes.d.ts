@@ -9,6 +9,7 @@ export interface IBook {
 type BooksApiDataType = {
   books: IBook[];
   totalPages: number;
+  totalCount: number;
 };
 
 type SearchQuery = {

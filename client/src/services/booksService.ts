@@ -15,6 +15,7 @@ export const getBooks = async (params: {
   return {
     books: data.books,
     totalPages: data.totalPages,
+    totalCount: data.totalCount,
   };
 };
 

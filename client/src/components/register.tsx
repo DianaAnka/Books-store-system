@@ -8,6 +8,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import AppBarMenu from "./AppBar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -182,6 +183,8 @@ const Register = (props: any) => {
     });
   };
   return (
+    <>
+      <AppBarMenu inLoginRoute={true}></AppBarMenu>
     <form className={classes.container} noValidate autoComplete="off">
       <Card className={classes.card}>
         <CardHeader className={classes.header} title="Register" />
@@ -245,6 +248,7 @@ const Register = (props: any) => {
         </CardActions>
       </Card>
     </form>
+    </>
   );
 };
 

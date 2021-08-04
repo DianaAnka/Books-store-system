@@ -1,4 +1,6 @@
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import AppBarMenu from "./AppBar";
 
 const useStyles = makeStyles({
   root: {
@@ -9,6 +11,41 @@ const useStyles = makeStyles({
     background: "bisque",
     marginTop: "200px",
   },
+  userSection: {
+    position: "relative",
+    width: "200px",
+    height: "200px",
+    margin: "10vh auto",
+  },
+  userInfoCotainer: {
+    width: "60%",
+    margin: "10vh auto",
+  },
+  userTable: {
+    width: "100%",
+  },
+  addImageIcon: {
+    position: "absolute",
+    right: "25px",
+    fontSize: "2em",
+  },
+  userUl: {
+    position: "relative",
+    left: "-20px",
+    listStyleType: "none",
+  },
+  tdContainer: {
+    margin: "30px",
+    borderRadius: "5px",
+    boxShadow: " 0px 6px 16px -6px rgb(1 1 1 / 50%)",
+    padding: "30px",
+    verticalAlign: "top",
+  },
+  userLi: {
+    padding: "40px 0",
+    color: "black",
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+  },
 });
 
 const BookPage = (props: any) => {
@@ -16,18 +53,53 @@ const BookPage = (props: any) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <h1>Title: {data.title}</h1>
-      <h2>Author : {data.author}</h2>
-      <h4>Abstract: {data.abstract}</h4>
-      <h4>Content: {data.content}</h4>
-      <h4>
-        Tags:{" "}
-        {data.tags?.map((tag: string) => (
-          <b> {tag}</b>
-        ))}
-      </h4>
-    </div>
+    <>
+      <AppBarMenu inLoginRoute={false}></AppBarMenu>
+      <div className={classes.userInfoCotainer}>
+        <table className={classes.userTable}>
+          <tbody>
+            <tr>
+              <td className={classes.tdContainer}>
+                <ul className={classes.userUl}>
+                  <li className={classes.userLi}>
+                    <b>Author : </b>
+                    {data.author}
+                  </li>
+                  <li className={classes.userLi}>
+                    <b>Tags : </b>
+
+                    {data.tags?.map((tag: string) => (
+                      <> {tag}</>
+                    ))}
+                  </li>
+                  <li className={classes.userLi}></li>
+                </ul>
+              </td>
+              <td className={classes.tdContainer}>
+                <ul className={classes.userUl}>
+                  <li className={classes.userLi}>
+                    <h1>
+                      {" "}
+                      <b>Title : </b>
+                      {data.title}
+                    </h1>
+                  </li>
+                  <li className={classes.userLi}>
+                    <b>Abstract : </b>
+                    {data.abstract}
+                  </li>
+                  <li className={classes.userLi}>
+                    <b>content : </b>
+                    {data.content}
+                  </li>
+                  <li className={classes.userLi}></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 

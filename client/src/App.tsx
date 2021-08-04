@@ -9,11 +9,13 @@ import useStore from "./store";
 import Profile from "./components/profile";
 import UnAuthorized from "./components/unAuthorized";
 import BookPage from "./components/bookPage";
-import { isLogged, logout } from "./services/authenticationService";
-import AddBookFom from "./components/addBookForm";
+import { isLogged } from "./services/authenticationService";
+import AddBookForm from "./components/addBookForm";
 import Header from "./components/header";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import PrivateRoute from "./components/privateRoute";
+import PublicRoute from "./components/publicRoute";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,36 +61,34 @@ function App(props: any) {
 
   useEffect(() => {
     (async () => {
-      if (store.user?.isLogged)
-        try {
-          setIsError(false);
-          const response = await isLogged();
-          store.setUser({
-            email: window.localStorage.getItem("email") || "",
-            isLogged: true,
-          });
-        } catch (e) {
-          // await logout();
-          enqueueSnackbar("Your session has ended");
-          history.push("/homePage");
-          setIsError(true);
-        } finally {
-          setIsLoading(false);
-        }
+      try {
+        setIsError(false);
+        const response = await isLogged();
+        store.setUser({
+          email: window.localStorage.getItem("email") || "",
+          isLogged: true,
+        });
+      } catch (e) {
+        // await logout();
+        enqueueSnackbar("Your session has ended");
+        history.push("/homePage");
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, []);
 
   return (
     <Router>
       <div className="App">
-        <Header />
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
+        <PublicRoute path="/login" component={Login} />
+        <PublicRoute path="/register" component={Register} />
         <Route path="/homePage" component={HomePage} />
         <Route path="/me" component={Profile} />
         <Route path="/401" component={UnAuthorized} />
         <Route path="/bookPage" component={BookPage} />
-        <Route path="/addBook" component={AddBookFom} />
+        <PrivateRoute path="/addBook" component={AddBookForm} />
         <Route exact path="/">
           <Redirect to="/homePage" />
         </Route>

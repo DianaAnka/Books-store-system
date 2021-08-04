@@ -11,6 +11,6 @@ router.post("/api/login", authController.login);
 
 router.get("/api/isLoggedIn", getUserIdentity, authController.isLoggedIn);
 
-router.put("/api/logout", getUserIdentity, authController.logOut);
+router.put("/api/logout", authController.logOut);
 
 export default router;

@@ -11,6 +11,7 @@ export async function getUser(req: e.Express.Request, res: Response) {
   try {
     const userInfo = await User.findOne({ email: email }).exec();
     if (!userInfo) return res.status(404).json({ error: "User not found" });
+    const query = await Book.find({ userId: userInfo?._id });
     const count = await Book.find({ userId: userInfo?._id })
       .countDocuments()
       .exec();
@@ -18,9 +19,12 @@ export async function getUser(req: e.Express.Request, res: Response) {
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
-    res
-      .status(200)
-      .json({ userInfo, userBooks, totalPages: Math.ceil(count / limit) });
+    res.status(200).json({
+      userInfo,
+      userBooks,
+      totalPages: Math.ceil(count / limit),
+      totalCount: count,
+    });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }

@@ -61,7 +61,11 @@ export async function getBooks(req: e.Express.Request, res: Response) {
         .skip((page - 1) * limit)
         .exec();
     }
-    res.json({ books, totalPages: Math.ceil(count / limit) });
+    res.json({
+      books,
+      totalPages: Math.ceil(count / limit),
+      totalCount: count,
+    });
   } catch (err: any) {
     console.log(err);
     res.status(500).json({

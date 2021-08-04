@@ -9,14 +9,24 @@ import { Pagination } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
 import { Link, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import AppBarMenu from "./AppBar";
 
 type Props = UserProps;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    userSection: {
+      position: "relative",
+      width: "200px",
+      height: "200px",
+      margin: "10vh auto",
+    },
+    fileInput: {
+      visibility: "hidden",
+    },
     userInfoCotainer: {
-      height: "50%",
-      padding: "20px",
-      display: "flex",
+      width: "60%",
+      margin: "10vh auto",
     },
     booksContainer: {
       height: "50%",
@@ -36,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(20),
     },
     flexContainer: {
-      marginTop: "4%",
+      marginTop: "8%",
       height: "90%",
       width: "95%",
       columnCount: 3,
@@ -48,7 +58,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paginatore: {
       marginTop: "20px",
-      position: "fixed",
+      position: "absolute",
+      marginBottom: "20px",
       left: "50%",
       transform: "translate(-50%, 0)",
     },
@@ -57,9 +68,33 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "white",
     },
     addBookBtn: {
-      position: "fixed",
-      left: "22%",
+      left: "-30%",
       top: "30%",
+    },
+    userTable: {
+      width: "100%",
+    },
+    addImageIcon: {
+      position: "absolute",
+      right: "25px",
+      fontSize: "2em",
+    },
+    userUl: {
+      position: "relative",
+      left: "-20px",
+      listStyleType: "none",
+    },
+    tdContainer: {
+      margin: "30px",
+      borderRadius: "5px",
+      boxShadow: " 0px 6px 16px -6px rgb(1 1 1 / 50%)",
+      padding: "30px",
+      verticalAlign: "top",
+    },
+    userLi: {
+      padding: "40px 0",
+      color: "gray",
+      borderBottom: "1px solid rgba(255,255,255,0.1)",
     },
   })
 );
@@ -71,6 +106,7 @@ const Profile: React.FC<Props> = (props: any) => {
   const [userBooks, setUserBooks] = useState<IBook[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [booksCount, setBooksCount] = useState(0);
   const [pageSize, setPageSize] = useState(3);
   const store = useStore((state) => state);
   const { enqueueSnackbar } = useSnackbar();
@@ -98,14 +134,16 @@ const Profile: React.FC<Props> = (props: any) => {
   useEffect(() => {
     (async () => {
       try {
-        const { userInfo, userBooks, totalPages } = await getUserProfile({
-          page: page,
-          limit: pageSize,
-        });
+        const { userInfo, userBooks, totalPages, totalCount } =
+          await getUserProfile({
+            page: page,
+            limit: pageSize,
+          });
         setUser(userInfo);
         setProfilePic(userInfo.profilePic);
         setUserBooks(userBooks);
         setCount(totalPages);
+        setBooksCount(totalCount);
       } catch (e) {
         enqueueSnackbar("Error has occured");
         history.push("/homePage");
@@ -115,32 +153,57 @@ const Profile: React.FC<Props> = (props: any) => {
   }, [page, pageSize]);
 
   return (
+    <>
+      <AppBarMenu inLoginRoute={false}></AppBarMenu>
     <div>
       <div className={classes.userInfoCotainer}>
-        <div className={classes.userEmailContainer}>
-          <h1>{user?.email}</h1>
-          <label htmlFor="photo">Update Profile Picture</label>
-          <br />
-          <input
-            type="file"
-            accept=".png, .jpg, .jpeg"
-            name="photo"
-            onChange={handleUpdateProfilePic}
-          />
-          <Button
-            className={classes.addBookBtn}
-            variant="contained"
-            size="large"
-          >
-            <Link className={classes.addBookLink} to="/addBook">
-              Add Book
-            </Link>
-          </Button>
-        </div>
-        <div className={classes.profilePicContainer}>
-          <img className={classes.large} src={profilePic} alt="img" />
-        </div>
+        <table className={classes.userTable}>
+          <tbody>
+            <tr>
+              <td className={classes.tdContainer}>
+                <section className={classes.userSection}>
+                  <label htmlFor="fileToUpload">
+                    {" "}
+                    <AddAPhotoIcon
+                      className={classes.addImageIcon}
+                    ></AddAPhotoIcon>
+                    <input
+                      type="file"
+                      id="fileToUpload"
+                      className={classes.fileInput}
+                      accept=".png,.jpg,jpeg,.PNG,.JPEG"
+                      name="fileToUpload"
+                      onChange={handleUpdateProfilePic}
+                    />
+                  </label>
+                  <img className={classes.large} src={profilePic} alt="img" />
+                </section>
+              </td>
+              <td className={classes.tdContainer}>
+                <ul className={classes.userUl}>
+                  <li className={classes.userLi}>
+                    <b>Email : </b>
+                    {user?.email}
+                  </li>
+                  <li className={classes.userLi}>
+                    <b>My Books Count : </b>
+                    {booksCount}
+                  </li>
+                  <li className={classes.userLi}>
+                    {" "}
+                    <Button variant="contained" size="large">
+                      <Link className={classes.addBookLink} to="/addBook">
+                        Add Book
+                      </Link>
+                    </Button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
       <div className={classes.booksContainer}>
         <h1>My Books</h1>
         <div className="mt-3">
@@ -160,6 +223,7 @@ const Profile: React.FC<Props> = (props: any) => {
             boundaryCount={1}
             variant="outlined"
             shape="rounded"
+            size="large"
             onChange={handlePageChange}
           />
         </div>
@@ -173,6 +237,7 @@ const Profile: React.FC<Props> = (props: any) => {
         </ul>
       </div>
     </div>
+    </>
   );
 };
 
