@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     addBookLink: {
       textDecoration: "none",
-      color: "white",
+      color: "black",
     },
     addBookBtn: {
       left: "-30%",
@@ -125,10 +125,14 @@ const Profile: React.FC<Props> = (props: any) => {
   const handleUpdateProfilePic = async (e: any) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
-    const email = store.user?.email;
-    if (email) formData.append("email", email!);
-    const { imageUrl } = await updateUserProfilePic(formData);
-    setProfilePic(imageUrl);
+    try {
+      const { imageUrl } = await updateUserProfilePic(formData);
+      setProfilePic(imageUrl);
+    } catch (e) {
+      enqueueSnackbar(
+        "Error has occured, couldn't update the profile picture "
+      );
+    }
   };
 
   useEffect(() => {
@@ -155,88 +159,88 @@ const Profile: React.FC<Props> = (props: any) => {
   return (
     <>
       <AppBarMenu inLoginRoute={false}></AppBarMenu>
-    <div>
-      <div className={classes.userInfoCotainer}>
-        <table className={classes.userTable}>
-          <tbody>
-            <tr>
-              <td className={classes.tdContainer}>
-                <section className={classes.userSection}>
-                  <label htmlFor="fileToUpload">
-                    {" "}
-                    <AddAPhotoIcon
-                      className={classes.addImageIcon}
-                    ></AddAPhotoIcon>
-                    <input
-                      type="file"
-                      id="fileToUpload"
-                      className={classes.fileInput}
-                      accept=".png,.jpg,jpeg,.PNG,.JPEG"
-                      name="fileToUpload"
-                      onChange={handleUpdateProfilePic}
-                    />
-                  </label>
-                  <img className={classes.large} src={profilePic} alt="img" />
-                </section>
-              </td>
-              <td className={classes.tdContainer}>
-                <ul className={classes.userUl}>
-                  <li className={classes.userLi}>
-                    <b>Email : </b>
-                    {user?.email}
-                  </li>
-                  <li className={classes.userLi}>
-                    <b>My Books Count : </b>
-                    {booksCount}
-                  </li>
-                  <li className={classes.userLi}>
-                    {" "}
-                    <Button variant="contained" size="large">
-                      <Link className={classes.addBookLink} to="/addBook">
-                        Add Book
-                      </Link>
-                    </Button>
-                  </li>
-                </ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className={classes.booksContainer}>
-        <h1>My Books</h1>
-        <div className="mt-3">
-          {"Items per Page: "}
-          <select onChange={handlePageSizeChange} value={pageSize}>
-            {pageSizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
-          <Pagination
-            className={classes.paginatore}
-            count={count}
-            page={page}
-            siblingCount={1}
-            boundaryCount={1}
-            variant="outlined"
-            shape="rounded"
-            size="large"
-            onChange={handlePageChange}
-          />
+      <div>
+        <div className={classes.userInfoCotainer}>
+          <table className={classes.userTable}>
+            <tbody>
+              <tr>
+                <td className={classes.tdContainer}>
+                  <section className={classes.userSection}>
+                    <label htmlFor="fileToUpload">
+                      {" "}
+                      <AddAPhotoIcon
+                        className={classes.addImageIcon}
+                      ></AddAPhotoIcon>
+                      <input
+                        type="file"
+                        id="fileToUpload"
+                        className={classes.fileInput}
+                        accept=".png,.jpg,jpeg,.PNG,.JPEG"
+                        name="fileToUpload"
+                        onChange={handleUpdateProfilePic}
+                      />
+                    </label>
+                    <img className={classes.large} src={profilePic} alt="img" />
+                  </section>
+                </td>
+                <td className={classes.tdContainer}>
+                  <ul className={classes.userUl}>
+                    <li className={classes.userLi}>
+                      <b>Email : </b>
+                      {user?.email}
+                    </li>
+                    <li className={classes.userLi}>
+                      <b>My Books Count : </b>
+                      {booksCount}
+                    </li>
+                    <li className={classes.userLi}>
+                      {" "}
+                      <Button variant="contained" size="large">
+                        <Link className={classes.addBookLink} to="/addBook">
+                          Add Book
+                        </Link>
+                      </Button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <ul className={classes.flexContainer}>
-          {userBooks &&
-            userBooks.map((book, index) => (
-              <li className={classes.item} key={index}>
-                <BookCard {...book} />
-              </li>
-            ))}
-        </ul>
+
+        <div className={classes.booksContainer}>
+          <h1>My Books</h1>
+          <div className="mt-3">
+            {"Items per Page: "}
+            <select onChange={handlePageSizeChange} value={pageSize}>
+              {pageSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            <Pagination
+              className={classes.paginatore}
+              count={count}
+              page={page}
+              siblingCount={1}
+              boundaryCount={1}
+              variant="outlined"
+              shape="rounded"
+              size="large"
+              onChange={handlePageChange}
+            />
+          </div>
+          <ul className={classes.flexContainer}>
+            {userBooks &&
+              userBooks.map((book, index) => (
+                <li className={classes.item} key={index}>
+                  <BookCard {...book} />
+                </li>
+              ))}
+          </ul>
+        </div>
       </div>
-    </div>
     </>
   );
 };

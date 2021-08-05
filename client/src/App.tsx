@@ -11,7 +11,6 @@ import UnAuthorized from "./components/unAuthorized";
 import BookPage from "./components/bookPage";
 import { isLogged } from "./services/authenticationService";
 import AddBookForm from "./components/addBookForm";
-import Header from "./components/header";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import PrivateRoute from "./components/privateRoute";

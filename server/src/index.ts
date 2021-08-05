@@ -1,7 +1,6 @@
 import express from "express";
 import { json } from "body-parser";
 import mongoose from "mongoose";
-import multer from "multer";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import router from "./routes/authRoute";

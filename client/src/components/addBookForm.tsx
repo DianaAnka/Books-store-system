@@ -56,31 +56,37 @@ const AddBookForm = (props: any) => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
-  const handleAddBook = async () => {
-    setBook({ ...book, tags: tags.map((tag) => tag.text) });
+  const validateBook = (book: IBook) => {
     if (book.title.length < 1) {
       setTitleError("Title is Required");
       if (book.author.length < 1) setAuthorError("Author is Required");
-      return;
+      return false;
     }
     if (book.author.length < 1) {
       setAuthorError("Author is Required");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const handleAddBook = async () => {
+    const bookToAdd = { ...book, tags: tags.map((tag) => tag.text) };
+
+    if (!validateBook(book)) return;
     try {
-      await addBook(book);
+      await addBook(bookToAdd);
       enqueueSnackbar("Adding Book is Complete");
       history.push("/me");
     } catch (e) {
-      enqueueSnackbar("Couldn't Add the book ");
+      enqueueSnackbar("Couldn't Add the book, Book already exists");
     }
   };
 
-  const handleDelete = (i: number) => {
+  const handleTagDelete = (i: number) => {
     setTags(tags.filter((tag, index) => index !== i));
   };
 
-  const handleAddition = (tag: Tag) => {
+  const handleTagAddition = (tag: Tag) => {
     setTags([...tags, tag]);
   };
 
@@ -167,8 +173,8 @@ const AddBookForm = (props: any) => {
                 tags={tags}
                 inputFieldPosition="inline"
                 inline
-                handleDelete={handleDelete}
-                handleAddition={handleAddition}
+                handleDelete={handleTagDelete}
+                handleAddition={handleTagAddition}
               />
             </div>
           </CardContent>

@@ -2,10 +2,9 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import { getBooks } from "../services/booksService";
 import BookCard from "./bookCard";
-import { Grid, GridSpacing, makeStyles, TextField } from "@material-ui/core";
+import { makeStyles, TextField } from "@material-ui/core";
 import { IBook, QueryParams } from "../types/bookTypes";
 import AppBarMenu from "./AppBar";
-import useStore from "../store";
 
 const useStyles = makeStyles({
   paginatore: {
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
 
 const HomePage = () => {
   const classes = useStyles();
- 
+
   const [books, setBooks] = useState<IBook[]>([]);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -72,6 +71,15 @@ const HomePage = () => {
     setQueryIsChanged(!queryIsChanged);
   };
 
+  const queryIsEmpty = () => {
+    return queryParams.author?.length === 0 &&
+      queryParams.title?.length === 0 &&
+      queryParams.abstract?.length === 0 &&
+      anyField.length === 0
+      ? true
+      : false;
+  };
+
   useEffect(() => {
     const params = {
       page: page,
@@ -97,13 +105,7 @@ const HomePage = () => {
   }, [page, pageSize, queryIsChanged]);
 
   useEffect(() => {
-    if (
-      queryParams.author?.length == 0 &&
-      queryParams.title?.length == 0 &&
-      queryParams.abstract?.length == 0 &&
-      anyField.length == 0
-    )
-      setQueryIsChanged(!queryIsChanged);
+    if (queryIsEmpty()) setQueryIsChanged(!queryIsChanged);
   }, [queryParams, anyField]);
 
   return (

@@ -3,15 +3,14 @@ import User from "../models/user";
 import { Request, Response } from "express";
 import Book from "../models/book";
 import { unlink } from "fs";
+import { findUserByEmail } from "../services/userService";
 
 export async function getUser(req: e.Express.Request, res: Response) {
   const email = req.email;
   var { page = 1, limit = 20 } = req.query;
   limit = limit > 20 ? 20 : limit;
   try {
-    const userInfo = await User.findOne({ email: email }).exec();
-    if (!userInfo) return res.status(404).json({ error: "User not found" });
-    const query = await Book.find({ userId: userInfo?._id });
+    const userInfo = await findUserByEmail(email!);
     const count = await Book.find({ userId: userInfo?._id })
       .countDocuments()
       .exec();
@@ -40,20 +39,18 @@ export async function updateUserProfilePic(
       console.log("no image");
       return res.status(400).json({ message: "No image" });
     }
-    const userBeforeUpdate = await User.findOne({ email }).exec();
     const user = await User.findOneAndUpdate(
       { email },
       {
         profilePic: req.file.filename,
-      },
-      { new: true }
+      }
     ).exec();
-    if (userBeforeUpdate?.profilePic)
-      unlink("./images/" + userBeforeUpdate?.profilePic, (err) => {
-        if (err) console.log(err);
+    if (user?.profilePic)
+      unlink("./images/" + user?.profilePic, (err) => {
+        if (err) return res.status(500).json({ error: err.message });
       });
     res.status(200).json({
-      imageUrl: user?.profilePic,
+      imageUrl: req.file.filename,
     });
   } catch (err: any) {
     console.log(err);

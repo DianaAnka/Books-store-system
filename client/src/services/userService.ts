@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { userApiDataType, userApiProfilePic } from "../types/userTypes";
 
 export const getUserProfile = async (params: {
