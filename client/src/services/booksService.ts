@@ -22,7 +22,7 @@ export const getBooks = async (params: {
 export const addBook = async (book: IBook): Promise<AxiosResponse> => {
   const res = await axios.post(
     "/addBook",
-    { ...book },
+    { book },
     { withCredentials: true }
   );
   return res;

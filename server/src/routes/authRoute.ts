@@ -4,12 +4,12 @@ import getUserIdentity from "../middlewares/getUserIdentityMiddleware";
 
 const router: Router = Router();
 
-router.post("/api/register", authController.register);
+router.post("/register", authController.registerController);
 
-router.post("/api/login", authController.login);
+router.post("/login", authController.loginController);
 
-router.get("/api/isLoggedIn", getUserIdentity, authController.isLoggedIn);
+router.get("/isLoggedIn", getUserIdentity, authController.isLoggedInController);
 
-router.put("/api/logout", authController.logOut);
+router.post("/logout", authController.logOutController);
 
 export default router;

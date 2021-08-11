@@ -1,59 +1,51 @@
 import * as e from "../customTypes/authReqCustom";
-import User from "../models/user";
 import { Request, Response } from "express";
-import Book from "../models/book";
-import { unlink } from "fs";
-import { findUserByEmail } from "../services/userService";
+import { findUserByEmail, updateUserByEmail } from "../services/userService";
+import { getBooksByUserId } from "../services/bookService";
+import uploadImageValidate from "../validation/uploadImageValidation";
+import { deleteOldProfilePic } from "../lib/deleteOldProfilePic";
+import { paginationValidate } from "../validation/paginationValidation";
+import { UserBookDto } from "../dtoTypes/bookDto";
 
-export async function getUser(req: e.Express.Request, res: Response) {
+export async function getUserController(req: e.Express.Request, res: Response) {
   const email = req.email;
-  var { page = 1, limit = 20 } = req.query;
-  limit = limit > 20 ? 20 : limit;
   try {
+    const { page = 1, limit = 10 } = req.query;
     const userInfo = await findUserByEmail(email!);
-    const count = await Book.find({ userId: userInfo?._id })
-      .countDocuments()
-      .exec();
-    const userBooks = await Book.find({ userId: userInfo?._id })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
+    const userBookDto: UserBookDto = {
+      limit: isNaN(+limit) || limit > 20 ? 20 : limit,
+      page: isNaN(+page) ? 1 : page,
+      userId: userInfo?._id,
+    };
+    const { books, totalPages, totalCount } = await getBooksByUserId(
+      userBookDto
+    );
     res.status(200).json({
       userInfo,
-      userBooks,
-      totalPages: Math.ceil(count / limit),
-      totalCount: count,
+      books,
+      totalPages,
+      totalCount,
     });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }
 }
 
-export async function updateUserProfilePic(
+export async function updateUserProfilePicController(
   req: e.Express.Request,
   res: Response
 ) {
   const email = req.email;
   try {
-    if (req.file == undefined) {
-      console.log("no image");
-      return res.status(400).json({ message: "No image" });
-    }
-    const user = await User.findOneAndUpdate(
-      { email },
-      {
-        profilePic: req.file.filename,
-      }
-    ).exec();
-    if (user?.profilePic)
-      unlink("./images/" + user?.profilePic, (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-      });
+    await uploadImageValidate.validate({ file: req.file });
+    const user = await updateUserByEmail(email!, {
+      profilePic: req.file.filename,
+    });
+    deleteOldProfilePic(user?.profilePic!);
     res.status(200).json({
       imageUrl: req.file.filename,
     });
   } catch (err: any) {
-    console.log(err);
     res.status(400).json({ error: err.message });
   }
 }

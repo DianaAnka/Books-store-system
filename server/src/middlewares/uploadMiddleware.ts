@@ -1,21 +1,22 @@
-import util from "util";
 import multer from "multer";
 
 let storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./images/");
+  destination: (req, file, callback) => {
+    callback(null, "./images/");
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+  filename: (req, file, callback) => {
+    callback(null, Date.now() + "-" + file.originalname);
   },
 });
+
 let uploadFile = multer({
   storage: storage,
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png|PNG|JPG|JPEG)$/)) {
-      return cb(new Error("only upload files with jpg, jpeg, png format."));
-    }
-    cb(null, true);
+  fileFilter(req, file, callback) {
+    if (!file.originalname.match(/\.(jpeg|jpg|png|PNG|JPG|JPEG)$/))
+      return callback(
+        new Error("only upload files with jpg, jpeg, png format.")
+      );
+    callback(null, true);
   },
 }).single("file");
 

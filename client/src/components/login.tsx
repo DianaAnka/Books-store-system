@@ -128,7 +128,7 @@ const Login = (props: any) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: state.email, password: state.password }),
     };
-    fetch("/api/login", requestOptions)
+    fetch("/login", requestOptions)
       .then(async (response) => {
         const isJson = response.headers
           .get("content-type")

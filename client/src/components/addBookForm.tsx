@@ -59,11 +59,13 @@ const AddBookForm = (props: any) => {
   const validateBook = (book: IBook) => {
     if (book.title.length < 1) {
       setTitleError("Title is Required");
+      setAuthorError("");
       if (book.author.length < 1) setAuthorError("Author is Required");
       return false;
     }
     if (book.author.length < 1) {
       setAuthorError("Author is Required");
+      setTitleError("");
       return false;
     }
     return true;

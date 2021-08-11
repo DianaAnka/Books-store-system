@@ -68,7 +68,6 @@ function App(props: any) {
           isLogged: true,
         });
       } catch (e) {
-        // await logout();
         enqueueSnackbar("Your session has ended");
         history.push("/homePage");
         setIsError(true);

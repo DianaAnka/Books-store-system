@@ -8,5 +8,6 @@ export namespace Express {
     query: any;
     email?: any;
     searchQuery?: string;
+    params?: any;
   }
 }

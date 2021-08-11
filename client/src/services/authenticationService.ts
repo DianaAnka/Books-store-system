@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 export const isLogged = async (): Promise<AxiosResponse> => {
   try {
-    const res: AxiosResponse = await axios.get("/api/isLoggedIn", {
+    const res: AxiosResponse = await axios.get("/isLoggedIn", {
       withCredentials: true,
     });
     return res;
@@ -14,7 +14,7 @@ export const isLogged = async (): Promise<AxiosResponse> => {
 
 export const logout = async (): Promise<AxiosResponse> => {
   try {
-    const data: AxiosResponse = await axios.put("/api/logout", {
+    const data: AxiosResponse = await axios.post("/logout", {
       withCredentials: true,
     });
     return data;

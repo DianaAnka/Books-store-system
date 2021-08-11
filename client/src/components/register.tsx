@@ -131,12 +131,13 @@ const Register = (props: any) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: state.email, password: state.password }),
     };
-    fetch("/api/register", requestOptions)
+    fetch("/register", requestOptions)
       .then(async (response) => {
         const isJson = response.headers
           .get("content-type")
           ?.includes("application/json");
         const data = isJson && (await response.json());
+        console.log(await response);
         // check for error response
         if (!response.ok) {
           // get error message from body or default to response status
@@ -155,7 +156,7 @@ const Register = (props: any) => {
           type: "registerFailed",
           payload: "Email exists",
         });
-        enqueueSnackbar(error);
+        enqueueSnackbar(error.message);
       });
   };
 
@@ -185,69 +186,69 @@ const Register = (props: any) => {
   return (
     <>
       <AppBarMenu inLoginRoute={true}></AppBarMenu>
-    <form className={classes.container} noValidate autoComplete="off">
-      <Card className={classes.card}>
-        <CardHeader className={classes.header} title="Register" />
-        <CardContent>
-          <div>
-            <TextField
-              error={state.isError}
-              fullWidth
-              id="email"
-              type="email"
-              label="Email"
-              placeholder="Email"
-              margin="normal"
-              onChange={handleEmailChange}
-              onKeyPress={handleKeyPress}
-              helperText={
-                state.email && !validateEmail(state.email)
-                  ? "enter valid email"
-                  : ""
-              }
-            />
-            <TextField
-              error={state.isError}
-              fullWidth
-              id="password"
-              type="password"
-              label="Password"
-              placeholder="Password"
-              margin="normal"
-              onChange={handlePasswordChange}
-              onKeyPress={handleKeyPress}
-              helperText={
-                state.password && !validatePassword(state.password)
-                  ? "password must be between 8 - 30 characters"
-                  : ""
-              }
-            />
-          </div>
-        </CardContent>
-        <CardActions>
-          <Button
-            variant="contained"
-            size="large"
-            color="secondary"
-            className={classes.loginBtn}
-            onClick={handleRegister}
-            disabled={state.isButtonDisabled}
-          >
-            Register
-          </Button>
-          <Link className={classes.link} to="/login">
+      <form className={classes.container} noValidate autoComplete="off">
+        <Card className={classes.card}>
+          <CardHeader className={classes.header} title="Register" />
+          <CardContent>
+            <div>
+              <TextField
+                error={state.isError}
+                fullWidth
+                id="email"
+                type="email"
+                label="Email"
+                placeholder="Email"
+                margin="normal"
+                onChange={handleEmailChange}
+                onKeyPress={handleKeyPress}
+                helperText={
+                  state.email && !validateEmail(state.email)
+                    ? "enter valid email"
+                    : ""
+                }
+              />
+              <TextField
+                error={state.isError}
+                fullWidth
+                id="password"
+                type="password"
+                label="Password"
+                placeholder="Password"
+                margin="normal"
+                onChange={handlePasswordChange}
+                onKeyPress={handleKeyPress}
+                helperText={
+                  state.password && !validatePassword(state.password)
+                    ? "password must be between 8 - 30 characters"
+                    : ""
+                }
+              />
+            </div>
+          </CardContent>
+          <CardActions>
             <Button
-              size="large"
               variant="contained"
+              size="large"
               color="secondary"
               className={classes.loginBtn}
+              onClick={handleRegister}
+              disabled={state.isButtonDisabled}
             >
-              Login
+              Register
             </Button>
-          </Link>
-        </CardActions>
-      </Card>
-    </form>
+            <Link className={classes.link} to="/login">
+              <Button
+                size="large"
+                variant="contained"
+                color="secondary"
+                className={classes.loginBtn}
+              >
+                Login
+              </Button>
+            </Link>
+          </CardActions>
+        </Card>
+      </form>
     </>
   );
 };
