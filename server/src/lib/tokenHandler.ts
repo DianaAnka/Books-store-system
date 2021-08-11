@@ -9,7 +9,6 @@ export function generateToken(email: string) {
   return token;
 }
 
-export function getEmailFromToken(token:string){
-  const decoded = jwt.verify(token, config.API_KEY) as JwtPayload;
-  return decoded.email;
+export function decodeToken(token: string) {
+  return jwt.verify(token, config.API_KEY) as JwtPayload;
 }

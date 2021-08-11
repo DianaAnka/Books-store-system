@@ -2,7 +2,6 @@ import { IBook } from "../types/book";
 import Book from "../models/book";
 import { SearchedBookDto, UserBookDto } from "../dtoTypes/bookDto";
 import { ObjectId } from "mongoose";
-import { paginationValidate } from "../validation/paginationValidation";
 
 export async function isNotDuplicatedBook(book: IBook) {
   const bookExisted = await Book.findOne({
@@ -46,10 +45,13 @@ async function getBooks(query: object, limit: number, page: number) {
   return { books, totalPages, totalCount };
 }
 
-export async function searchBooks(data: SearchedBookDto) {
-  const { page = 1, limit = 10 } = paginationValidate(data);
-  const query = buildSearchQuery(data);
-  const { books, totalPages, totalCount } = await getBooks(query, limit, page);
+export async function searchBooks(searchedBookDto: SearchedBookDto) {
+  const query = buildSearchQuery(searchedBookDto);
+  const { books, totalPages, totalCount } = await getBooks(
+    query,
+    searchedBookDto.limit,
+    searchedBookDto.page
+  );
   return { books, totalPages, totalCount };
 }
 

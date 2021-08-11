@@ -6,7 +6,7 @@ import {
 import { isCorrectPassword } from "../lib/verifyPassword";
 import User from "../models/user";
 
-export function findUserByEmail(email: string) {
+export function getUserByEmail(email: string) {
   return User.findOne({ email: email }).exec();
 }
 
@@ -16,7 +16,7 @@ export async function addNewUser(userDto: RegisterUserDto) {
 }
 
 export async function loginUser(data: LoginUserDto) {
-  const user = await findUserByEmail(data.email);
+  const user = await getUserByEmail(data.email);
   if (!user) throw new Error("Incorrect email or password");
   if (!(await isCorrectPassword(data.password, user)))
     throw new Error("Incorrect email or password");

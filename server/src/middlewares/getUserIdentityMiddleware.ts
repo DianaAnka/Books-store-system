@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as e from "../customTypes/authReqCustom";
-import { getEmailFromToken } from "../lib/tokenHandler";
+import { decodeToken } from "../lib/tokenHandler";
 
 const getUserIdentity = function (
   req: e.Express.Request,
@@ -11,7 +11,7 @@ const getUserIdentity = function (
   if (!token)
     return res.status(401).json({ error: "Unauthorized: No token provided" });
   try {
-    req.email = getEmailFromToken(token);
+    req.email = decodeToken(token).email;
     next();
   } catch (err: any) {
     return res

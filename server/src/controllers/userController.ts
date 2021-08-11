@@ -1,17 +1,16 @@
 import * as e from "../customTypes/authReqCustom";
-import { Request, Response } from "express";
-import { findUserByEmail, updateUserByEmail } from "../services/userService";
+import { Response } from "express";
+import { getUserByEmail, updateUserByEmail } from "../services/userService";
 import { getBooksByUserId } from "../services/bookService";
 import uploadImageValidate from "../validation/uploadImageValidation";
 import { deleteOldProfilePic } from "../lib/deleteOldProfilePic";
-import { paginationValidate } from "../validation/paginationValidation";
 import { UserBookDto } from "../dtoTypes/bookDto";
 
 export async function getUserController(req: e.Express.Request, res: Response) {
   const email = req.email;
   try {
     const { page = 1, limit = 10 } = req.query;
-    const userInfo = await findUserByEmail(email!);
+    const userInfo = await getUserByEmail(email!);
     const userBookDto: UserBookDto = {
       limit: isNaN(+limit) || limit > 20 ? 20 : limit,
       page: isNaN(+page) ? 1 : page,

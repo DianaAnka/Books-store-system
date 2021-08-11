@@ -6,8 +6,7 @@ import {
   isNotDuplicatedBook,
   searchBooks,
 } from "../services/bookService";
-import { findUserByEmail } from "../services/userService";
-import { paginationValidate } from "../validation/paginationValidation";
+import { getUserByEmail } from "../services/userService";
 import { SearchedBookDto } from "../dtoTypes/bookDto";
 
 export async function addBookController(req: e.Express.Request, res: Response) {
@@ -15,7 +14,7 @@ export async function addBookController(req: e.Express.Request, res: Response) {
   const email = req.email;
   try {
     await bookValidate.validate(book);
-    const user = await findUserByEmail(email);
+    const user = await getUserByEmail(email);
     if (!user) return res.status(400).json({ error: "user not found" });
     await isNotDuplicatedBook(book);
     await addBook(book, user?._id);

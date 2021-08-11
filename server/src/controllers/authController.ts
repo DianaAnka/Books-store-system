@@ -3,7 +3,7 @@ import * as e from "../customTypes/authReqCustom";
 import userValidate from "../validation/authValidation";
 import {
   addNewUser,
-  findUserByEmail,
+  getUserByEmail,
   loginUser,
 } from "../services/userService";
 import { generateToken } from "../lib/tokenHandler";
@@ -16,7 +16,7 @@ export async function registerController(
   const registerUserDto: RegisterUserDto = req.body;
   try {
     userValidate.validate(registerUserDto);
-    const userExisting = await findUserByEmail(registerUserDto.email);
+    const userExisting = await getUserByEmail(registerUserDto.email);
     if (userExisting)
       return res.status(400).json({ message: "Error email exists" });
     await addNewUser(registerUserDto);
@@ -43,7 +43,7 @@ export async function isLoggedInController(
 ) {
   const email = req.email;
   try {
-    const user = await findUserByEmail(email!);
+    const user = await getUserByEmail(email!);
     if (!user) return res.status(400).json({ error: "Not logged " });
     return res.status(200).json({ message: "Logged " });
   } catch (err: any) {
