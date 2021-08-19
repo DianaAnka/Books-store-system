@@ -3,7 +3,7 @@ import Book from "../models/book";
 import { SearchedBookDto, UserBookDto } from "../dtoTypes/bookDto";
 import { ObjectId } from "mongoose";
 
-export async function isNotDuplicatedBook(book: IBook) {
+export async function insureNotDuplicatedBook(book: IBook) {
   const bookExisted = await Book.findOne({
     author: book.author,
     title: book.title,

@@ -1,6 +1,8 @@
 .App {
-  text-align: center;
+  text-align: center !important;
   margin-bottom: 10vh;
+  font-family: "Open Sans Condensed";
+  height: 100%;
 }
 
 .App-logo {
@@ -130,4 +132,8 @@
   background: #f88d8d;
   color: #fff;
   border: none;
+}
+
+h1 {
+  font-size: xx-large;
 }

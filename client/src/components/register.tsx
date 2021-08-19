@@ -1,38 +1,37 @@
 import React, { useReducer, useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import AppBarMenu from "./AppBar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: "flex",
       flexWrap: "wrap",
-      width: 400,
+      width: 450,
       margin: `${theme.spacing(0)} auto`,
     },
     loginBtn: {
       marginTop: theme.spacing(2),
       flexGrow: 1,
-      width: 200,
     },
     header: {
-      textAlign: "center",
-      background: "#212121",
-      color: "#fff",
-    },
-    card: {
-      marginTop: theme.spacing(10),
+      width: 400,
     },
     link: {
       textDecoration: "none",
+    },
+    root: {
+      height: "100vh",
+      textAlign: "center",
+      verticalAlign: "middle",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: " #d9e4f5",
+      backgroundImage: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
     },
   })
 );
@@ -137,7 +136,6 @@ const Register = (props: any) => {
           .get("content-type")
           ?.includes("application/json");
         const data = isJson && (await response.json());
-        console.log(await response);
         // check for error response
         if (!response.ok) {
           // get error message from body or default to response status
@@ -156,7 +154,7 @@ const Register = (props: any) => {
           type: "registerFailed",
           payload: "Email exists",
         });
-        enqueueSnackbar(error.message);
+        enqueueSnackbar("Email exists ");
       });
   };
 
@@ -184,72 +182,74 @@ const Register = (props: any) => {
     });
   };
   return (
-    <>
-      <AppBarMenu inLoginRoute={true}></AppBarMenu>
+    <div className={classes.root}>
       <form className={classes.container} noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="Register" />
-          <CardContent>
-            <div>
-              <TextField
-                error={state.isError}
-                fullWidth
-                id="email"
-                type="email"
-                label="Email"
-                placeholder="Email"
-                margin="normal"
-                onChange={handleEmailChange}
-                onKeyPress={handleKeyPress}
-                helperText={
-                  state.email && !validateEmail(state.email)
-                    ? "enter valid email"
-                    : ""
-                }
-              />
-              <TextField
-                error={state.isError}
-                fullWidth
-                id="password"
-                type="password"
-                label="Password"
-                placeholder="Password"
-                margin="normal"
-                onChange={handlePasswordChange}
-                onKeyPress={handleKeyPress}
-                helperText={
-                  state.password && !validatePassword(state.password)
-                    ? "password must be between 8 - 30 characters"
-                    : ""
-                }
-              />
-            </div>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              size="large"
-              color="secondary"
-              className={classes.loginBtn}
-              onClick={handleRegister}
-              disabled={state.isButtonDisabled}
-            >
-              Register
-            </Button>
-            <Link className={classes.link} to="/login">
-              <Button
-                size="large"
-                variant="contained"
-                color="secondary"
-                className={classes.loginBtn}
-              >
-                Login
-              </Button>
-            </Link>
-          </CardActions>
-        </Card>
+        <div className={classes.header}>
+          <Link to="/homePage">
+            <img src="public/homePage.png" alt="" />
+          </Link>
+          <h3>Sign Up to Books Store System</h3>{" "}
+        </div>
+        <div>
+          <TextField
+            variant="outlined"
+            error={state.isError}
+            fullWidth
+            id="email"
+            type="email"
+            label="Email"
+            placeholder="Email"
+            margin="normal"
+            onChange={handleEmailChange}
+            onKeyPress={handleKeyPress}
+            helperText={
+              state.email && !validateEmail(state.email)
+                ? "enter valid email"
+                : ""
+            }
+          />
+          <TextField
+            variant="outlined"
+            error={state.isError}
+            fullWidth
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="Password"
+            margin="normal"
+            onChange={handlePasswordChange}
+            onKeyPress={handleKeyPress}
+            helperText={
+              state.password && !validatePassword(state.password)
+                ? "password must be between 8 - 30 characters"
+                : ""
+            }
+          />
+        </div>
+        <div className={classes.header}>
+          <Button
+            variant="contained"
+            size="large"
+            color="secondary"
+            className={classes.loginBtn}
+            onClick={handleRegister}
+            disabled={state.isButtonDisabled}
+          >
+            Sign Up
+          </Button>
+        </div>
+        <div className={classes.header}>
+          <span>
+            <p>
+              Already have account?
+              <Link className={classes.link} to="/login">
+                Log in
+              </Link>
+            </p>
+          </span>
+        </div>
       </form>
-    </>
+    </div>
   );
 };
 

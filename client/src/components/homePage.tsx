@@ -1,40 +1,40 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import { getBooks } from "../services/booksService";
-import BookCard from "./bookCard";
-import { makeStyles, TextField } from "@material-ui/core";
+import BooksContainer from "./booksContainer";
+import { Button, makeStyles, TextField } from "@material-ui/core";
 import { IBook, QueryParams } from "../types/bookTypes";
 import AppBarMenu from "./AppBar";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles({
   paginatore: {
-    marginTop: "20px",
+    marginTop: "40px",
     marginBottom: "20px",
     position: "absolute",
     left: "50%",
     transform: "translate(-50%, 0)",
   },
-  flexContainer: {
-    marginTop: "7%",
-    height: "100%",
-    width: "90%",
-    columnCount: 3,
-    listStyleType: "none",
-  },
-  item: {
-    height: "100%",
-    width: "100%",
-  },
   search: {
-    width: "10%",
+    width: "15%",
     height: 40,
     padding: 10,
+    borderColor: "black",
   },
   searchBtn: {
     display: "inline",
     marginLeft: 20,
     height: 40,
     fontSize: 17,
+    marginTop: 17,
+    borderRadius: 40,
+  },
+  img: {
+    width: "75vw",
+    objectFit: "cover",
+  },
+  itemPerPage: {
+    marginTop: 20,
   },
 });
 
@@ -112,95 +112,97 @@ const HomePage = () => {
     <>
       <AppBarMenu inLoginRoute={false}></AppBarMenu>
       <div>
-        <h1>Books List</h1>
-        <div className="input-group mb-3">
-          <TextField
-            type="search"
-            className={classes.search}
-            placeholder="Any Field"
-            value={anyField}
-            onChange={({ target }) =>
-              setAnyField(target.value.trim().toLowerCase())
-            }
-          />
-          <TextField
-            type="search"
-            className={classes.search}
-            placeholder="Author"
-            value={queryParams?.author}
-            disabled={anyField ? true : false}
-            onChange={({ target }) =>
-              setQueryParams({
-                ...queryParams,
-                author: target.value.trim().toLowerCase(),
-              })
-            }
-          />
-          <TextField
-            type="search"
-            className={classes.search}
-            placeholder="Title"
-            value={queryParams?.title}
-            disabled={anyField ? true : false}
-            onChange={({ target }) =>
-              setQueryParams({
-                ...queryParams,
-                title: target.value.trim().toLowerCase(),
-              })
-            }
-          />
-          <TextField
-            type="search"
-            className={classes.search}
-            placeholder="Abstract"
-            value={queryParams?.abstract}
-            disabled={anyField ? true : false}
-            onChange={({ target }) =>
-              setQueryParams({
-                ...queryParams,
-                abstract: target.value.trim().toLowerCase(),
-              })
-            }
-          />
-          <button
-            className={classes.searchBtn}
-            type="button"
-            onClick={sendSearchQuery}
-          >
-            Search
-          </button>
+        <img className={classes.img} src="public/cover.jpg" alt="" />
+        <div>
+          <h1>Our Books Collections</h1>
+          <div className="input-group mb-3">
+            <TextField
+              type="search"
+              className={classes.search}
+              placeholder="Search Any Field"
+              value={anyField}
+              onChange={({ target }) =>
+                setAnyField(target.value.trim().toLowerCase())
+              }
+              variant="outlined"
+            />
+            <TextField
+              type="search"
+              className={classes.search}
+              placeholder="Book Author"
+              value={queryParams?.author}
+              disabled={anyField ? true : false}
+              onChange={({ target }) =>
+                setQueryParams({
+                  ...queryParams,
+                  author: target.value.trim().toLowerCase(),
+                })
+              }
+              variant="outlined"
+            />
+            <TextField
+              type="search"
+              className={classes.search}
+              placeholder="Book Title"
+              value={queryParams?.title}
+              disabled={anyField ? true : false}
+              onChange={({ target }) =>
+                setQueryParams({
+                  ...queryParams,
+                  title: target.value.trim().toLowerCase(),
+                })
+              }
+              variant="outlined"
+            />
+            <TextField
+              type="search"
+              className={classes.search}
+              placeholder="Book Abstract"
+              value={queryParams?.abstract}
+              disabled={anyField ? true : false}
+              onChange={({ target }) =>
+                setQueryParams({
+                  ...queryParams,
+                  abstract: target.value.trim().toLowerCase(),
+                })
+              }
+              variant="outlined"
+            />
+            <Button
+              className={classes.searchBtn}
+              variant="contained"
+              startIcon={<SearchIcon />}
+              onClick={sendSearchQuery}
+            >
+              Find Book
+            </Button>
+          </div>
+
+          <div className={classes.itemPerPage}>
+            {"Items per Page: "}
+            <select onChange={handlePageSizeChange} value={pageSize}>
+              {pageSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            {" Total Books Count: "}
+            {booksCount}
+            <Pagination
+              className={classes.paginatore}
+              count={count}
+              page={page}
+              siblingCount={1}
+              boundaryCount={1}
+              variant="outlined"
+              shape="rounded"
+              size="large"
+              onChange={handlePageChange}
+            />
+          </div>
         </div>
-        <div className="mt-3">
-          {"Items per Page: "}
-          <select onChange={handlePageSizeChange} value={pageSize}>
-            {pageSizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
-          {" Total Books Count: "}
-          {booksCount}
-          <Pagination
-            className={classes.paginatore}
-            count={count}
-            page={page}
-            siblingCount={1}
-            boundaryCount={1}
-            variant="outlined"
-            shape="rounded"
-            size="large"
-            onChange={handlePageChange}
-          />
-        </div>
-        <ul className={classes.flexContainer}>
-          {books &&
-            books.map((book, index) => (
-              <li className={classes.item} key={index}>
-                <BookCard {...book} />
-              </li>
-            ))}
-        </ul>
+        <BooksContainer books={books}></BooksContainer>
       </div>
     </>
   );

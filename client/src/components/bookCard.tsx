@@ -11,12 +11,16 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: "auto",
-    maxHeight: "500px",
-    overflow: "auto",
-    display: "block",
+    height: "90vh",
+    maxHeight: "100vh",
     background: "lavender",
-    marginBottom: "20px",
+    marginBottom: 20,
+    overflowY: "auto",
+  },
+  media: {
+    height: "auto",
+    width: "100%",
+    objectFit: "cover",
   },
 });
 
@@ -38,9 +42,9 @@ const BookCard = (props: IBook) => {
     <Card className={classes.root}>
       <CardActionArea>
         <CardMedia
+          className={classes.media}
           component="img"
           alt="Contemplative Reptile"
-          height="140"
           image={`https://picsum.photos/200/300?x=${Math.random()}`}
           title="Contemplative Reptile"
         />

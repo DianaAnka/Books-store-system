@@ -1,7 +1,6 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import useStore from "../store";
 import { Link, useHistory } from "react-router-dom";
@@ -11,13 +10,11 @@ import { logout } from "../services/authenticationService";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      fontFamily: "Open Sans Condensed",
+      fontSize: "1.5em",
       flexGrow: 1,
-      backgroundColor: "lavender",
+      backgroundColor: "white",
       color: "black",
-      marginBottom: "2%",
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
     },
     title: {
       flexGrow: 1,
@@ -25,11 +22,19 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     loginLink: {
       textDecoration: "none",
-      color: "white",
+      color: "black",
     },
-    links:{
+    links: {
+      fontFamily: "Open Sans Condensed",
       textDecoration: "none",
-    }
+      marginLeft: "70%",
+      paddingRight: 20,
+    },
+    titleLink: {
+      fontFamily: "Open Sans Condensed",
+      textDecoration: "none",
+      flexGrow: 1,
+    },
   })
 );
 
@@ -49,7 +54,6 @@ const AppBarMenu = (props: any) => {
       enqueueSnackbar("Logout");
       history.push("/homePage");
     } catch (e) {
-      console.log("error ", e);
       enqueueSnackbar("Couldn't logout");
       history.push("/homePage");
     } finally {
@@ -58,33 +62,20 @@ const AppBarMenu = (props: any) => {
 
   return (
     <div className={classes.root}>
-      <AppBar style={{ background: "lavender" }} position="static">
+      <AppBar style={{ background: "white" }} position="static">
         <Toolbar>
-          <Typography
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Link className={classes.links} to="/me">
-              {store.user?.email}
-            </Link>
-          </Typography>
-          <Typography variant="h4" className={classes.title}>
-            <Link className={classes.links} to="/homePage">
-              BSS
-            </Link>
-          </Typography>{" "}
+          <Link className={classes.titleLink} to="/homePage">
+            <img src="public/logo.png" alt="" />
+          </Link>
+          <Link className={classes.links} to="/me">
+            {store.user?.email}
+          </Link>{" "}
           {store.user?.isLogged ? (
-            <Button
-              variant="contained"
-              size="large"
-              color="secondary"
-              onClick={handleLogout}
-            >
+            <Button size="large" onClick={handleLogout}>
               Logout
             </Button>
           ) : !props.inLoginRoute ? (
-            <Button variant="contained" size="large" color="secondary">
+            <Button size="large">
               <Link className={classes.loginLink} to="/login">
                 Login
               </Link>

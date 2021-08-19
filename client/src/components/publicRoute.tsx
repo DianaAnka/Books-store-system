@@ -7,8 +7,6 @@ const PublicRoute: React.FC<{
   path: string;
 }> = (props) => {
   const store = useStore((state) => state);
-  console.log();
-
   return !store.user?.isLogged ? (
     <Route path={props.path} component={props.component} />
   ) : (

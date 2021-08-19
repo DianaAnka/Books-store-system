@@ -1,9 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import { IBook } from "../types/bookTypes";
 import { useState } from "react";
@@ -14,6 +10,7 @@ import { WithContext as ReactTags } from "react-tag-input";
 import { Tag } from "react-tag-input";
 import "../App.css";
 import AppBarMenu from "./AppBar";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,14 +22,16 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: "10%",
     },
     loginBtn: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(6),
       flexGrow: 1,
       width: 200,
+      backgroundColor: "black",
+      color: "white",
+      borderRadius: 16,
     },
     header: {
       textAlign: "center",
-      background: "#212121",
-      color: "#fff",
+      width: 450,
     },
     card: {
       marginTop: theme.spacing(10),
@@ -41,8 +40,44 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: "none",
     },
     tagLabel: {
-      float: "left",
+      top: 0,
+      left: 0,
+      position: "absolute",
       color: "#7575a1",
+      fontFamily: "sans-serif",
+      transform: "translate(14px, 4px) scale(1)",
+      fontSize: "2em",
+    },
+    root: {
+      height: "100vh",
+      textAlign: "center",
+      verticalAlign: "middle",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: " #d9e4f5",
+      backgroundImage: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
+    },
+    tagsContainer: {
+      marginTop: "16px",
+      marginBottom: "8px",
+      display: "inline-flex",
+      borderRadius: 13,
+      border: "1px solid #c4c4c4",
+      width: "98%",
+      position: "relative",
+      flexDirection: "column",
+      verticalAlign: "top",
+      paddingTop: 25,
+      paddingBottom: 12,
+      backgroundColor: "#f7f7f7",
+    },
+    textField: {
+      [`& fieldset`]: {
+        borderRadius: 13,
+      },
+      backgroundColor: "#f7f7f7",
+      borderRadius: 13,
     },
   })
 );
@@ -95,79 +130,91 @@ const AddBookForm = (props: any) => {
   return (
     <>
       <AppBarMenu inLoginRoute={false}></AppBarMenu>
-      <form className={classes.container} noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="Add Book" />
-          <CardContent>
-            <div>
-              <TextField
-                fullWidth
-                id="title"
-                type="text"
-                label="Title"
-                placeholder="Title"
-                margin="normal"
-                helperText={titleError}
-                error={titleError ? true : false}
-                required
-                onChange={({ target }) =>
-                  setBook({
-                    ...book,
-                    title: target.value.trim(),
-                  })
-                }
-              />
-              <TextField
-                fullWidth
-                id="author"
-                type="text"
-                label="Author"
-                placeholder="Author"
-                margin="normal"
-                helperText={authorError}
-                error={authorError ? true : false}
-                required
-                onChange={({ target }) =>
-                  setBook({
-                    ...book,
-                    author: target.value.trim(),
-                  })
-                }
-              />
-              <TextField
-                fullWidth
-                id="abstract"
-                type="text"
-                label="Abstract"
-                placeholder="Abstract"
-                margin="normal"
-                multiline
-                rows={2}
-                rowsMax={4}
-                onChange={({ target }) =>
-                  setBook({
-                    ...book,
-                    abstract: target.value.trim(),
-                  })
-                }
-              />
-              <TextField
-                fullWidth
-                id="content"
-                type="text"
-                label="Content"
-                placeholder="Content"
-                margin="normal"
-                multiline
-                rows={4}
-                rowsMax={8}
-                onChange={({ target }) =>
-                  setBook({
-                    ...book,
-                    content: target.value.trim(),
-                  })
-                }
-              />
+      <div className={classes.root}>
+        <form className={classes.container} noValidate autoComplete="off">
+          <div className={classes.header}>
+            <h1>Add Book Form</h1>
+          </div>
+          <div>
+            <TextField
+              className={classes.textField}
+              variant="outlined"
+              fullWidth
+              id="title"
+              type="text"
+              label="Title"
+              placeholder="Enter Book Title"
+              margin="normal"
+              helperText={titleError}
+              error={titleError ? true : false}
+              required
+              onChange={({ target }) =>
+                setBook({
+                  ...book,
+                  title: target.value.trim(),
+                })
+              }
+            />
+
+            <TextField
+              className={classes.textField}
+              variant="outlined"
+              fullWidth
+              id="author"
+              type="text"
+              label="Author"
+              placeholder="Enter Book Author"
+              margin="normal"
+              helperText={authorError}
+              error={authorError ? true : false}
+              required
+              onChange={({ target }) =>
+                setBook({
+                  ...book,
+                  author: target.value.trim(),
+                })
+              }
+            />
+            <TextField
+              className={classes.textField}
+              variant="outlined"
+              fullWidth
+              id="abstract"
+              type="text"
+              label="Abstract"
+              placeholder="Enter Book Abstract"
+              margin="normal"
+              multiline
+              rows={2}
+              rowsMax={4}
+              onChange={({ target }) =>
+                setBook({
+                  ...book,
+                  abstract: target.value.trim(),
+                })
+              }
+            />
+            <TextField
+              className={classes.textField}
+              variant="outlined"
+              fullWidth
+              id="content"
+              type="text"
+              label="Content"
+              placeholder="Enter Book Content"
+              margin="normal"
+              multiline
+              rows={4}
+              rowsMax={8}
+              onChange={({ target }) =>
+                setBook({
+                  ...book,
+                  content: target.value.trim(),
+                })
+              }
+            />
+            <div className={classes.tagsContainer}>
+              {" "}
               <label className={classes.tagLabel} htmlFor="Tags">
                 Tags
               </label>
@@ -179,20 +226,20 @@ const AddBookForm = (props: any) => {
                 handleAddition={handleTagAddition}
               />
             </div>
-          </CardContent>
-          <CardActions>
+          </div>
+          <div className={classes.header}>
             <Button
               variant="contained"
               size="large"
-              color="secondary"
               className={classes.loginBtn}
               onClick={handleAddBook}
+              endIcon={<ArrowForwardIcon />}
             >
               ADD
             </Button>
-          </CardActions>
-        </Card>
-      </form>
+          </div>
+        </form>
+      </div>
     </>
   );
 };

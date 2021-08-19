@@ -12,8 +12,8 @@ export async function getUserController(req: e.Express.Request, res: Response) {
     const { page = 1, limit = 10 } = req.query;
     const userInfo = await getUserByEmail(email!);
     const userBookDto: UserBookDto = {
-      limit: isNaN(+limit) || limit > 20 ? 20 : limit,
-      page: isNaN(+page) ? 1 : page,
+      limit: isNaN(+limit) || limit > 20 ? 20 : Math.ceil(limit),
+      page: isNaN(+page) ? 1 : Math.ceil(page),
       userId: userInfo?._id,
     };
     const { books, totalPages, totalCount } = await getBooksByUserId(

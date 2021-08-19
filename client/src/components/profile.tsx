@@ -1,7 +1,7 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import useStore from "../store";
 import { IBook } from "../types/bookTypes";
-import { IUser, UserProps } from "../types/userTypes";
+import { IUser } from "../types/userTypes";
 import { getUserProfile, updateUserProfilePic } from "../services/userService";
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import BookCard from "./bookCard";
@@ -11,8 +11,8 @@ import { Link, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import AppBarMenu from "./AppBar";
+import BooksContainer from "./booksContainer";
 
-type Props = UserProps;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     userSection: {
@@ -44,17 +44,6 @@ const useStyles = makeStyles((theme: Theme) =>
     large: {
       width: theme.spacing(20),
       height: theme.spacing(20),
-    },
-    flexContainer: {
-      marginTop: "8%",
-      height: "90%",
-      width: "95%",
-      columnCount: 3,
-      listStyleType: "none",
-    },
-    item: {
-      height: "100%",
-      width: "100%",
     },
     paginatore: {
       marginTop: "20px",
@@ -99,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Profile: React.FC<Props> = (props: any) => {
+const Profile = () => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser>();
   const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
@@ -149,9 +138,7 @@ const Profile: React.FC<Props> = (props: any) => {
         setCount(totalPages);
         setBooksCount(totalCount);
       } catch (e) {
-        enqueueSnackbar("Error has occured");
         history.push("/homePage");
-      } finally {
       }
     })();
   }, [page, pageSize]);
@@ -231,14 +218,7 @@ const Profile: React.FC<Props> = (props: any) => {
               onChange={handlePageChange}
             />
           </div>
-          <ul className={classes.flexContainer}>
-            {userBooks &&
-              userBooks.map((book, index) => (
-                <li className={classes.item} key={index}>
-                  <BookCard {...book} />
-                </li>
-              ))}
-          </ul>
+          <BooksContainer books={userBooks}></BooksContainer>
         </div>
       </div>
     </>

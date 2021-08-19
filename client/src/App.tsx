@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { Route, BrowserRouter as Router, Redirect } from "react-router-dom";
+import { Route, BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
 import Login from "./components/login";
 import Register from "./components/register";
 import HomePage from "./components/homePage";
@@ -12,7 +12,6 @@ import BookPage from "./components/bookPage";
 import { isLogged } from "./services/authenticationService";
 import AddBookForm from "./components/addBookForm";
 import { useHistory } from "react-router-dom";
-import { useSnackbar } from "notistack";
 import PrivateRoute from "./components/privateRoute";
 import PublicRoute from "./components/publicRoute";
 
@@ -54,21 +53,24 @@ function App(props: any) {
   const store = useStore((state) => state);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   const classes = useStyles();
 
   useEffect(() => {
     (async () => {
       try {
+        setIsLoading(true);
         setIsError(false);
-        const response = await isLogged();
+        await isLogged();
         store.setUser({
           email: window.localStorage.getItem("email") || "",
           isLogged: true,
         });
       } catch (e) {
-        enqueueSnackbar("Your session has ended");
+        store.setUser({
+          email: "",
+          isLogged: false,
+        });
         history.push("/homePage");
         setIsError(true);
       } finally {
@@ -76,26 +78,27 @@ function App(props: any) {
       }
     })();
   }, []);
-
   return (
     <Router>
-      <div className="App">
-        <PublicRoute path="/login" component={Login} />
-        <PublicRoute path="/register" component={Register} />
-        <Route path="/homePage" component={HomePage} />
-        <Route path="/me" component={Profile} />
-        <Route path="/401" component={UnAuthorized} />
-        <Route path="/bookPage" component={BookPage} />
-        <PrivateRoute path="/addBook" component={AddBookForm} />
-        <Route exact path="/">
-          <Redirect to="/homePage" />
-        </Route>
-      </div>
+      {isLoading && <h1>Loading</h1>}
+      {!isLoading && (
+        <div className="App">
+          <Switch>
+            <PrivateRoute path="/me" component={Profile} />
+            <Route path="/401" component={UnAuthorized} />
+            <Route path="/bookPage" component={BookPage} />
+            <PublicRoute path="/login" component={Login} />
+            <PublicRoute path="/register" component={Register} />
+            <PrivateRoute path="/addBook" component={AddBookForm} />
+            <Route exact path="/">
+              <Redirect to="/homePage" />
+            </Route>
+            <Route path="/homePage" component={HomePage} />
+          </Switch>
+        </div>
+      )}
     </Router>
   );
 }
 
 export default App;
-function componentWillMount() {
-  throw new Error("Function not implemented.");
-}

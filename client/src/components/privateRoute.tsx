@@ -7,11 +7,10 @@ const PrivateRoute: React.FC<{
   path: string;
 }> = (props) => {
   const store = useStore((state) => state);
-
   return store.user?.isLogged ? (
     <Route path={props.path} component={props.component} />
   ) : (
-    <Redirect to="/login" />
+    <Redirect to="/homePage" />
   );
 };
 export default PrivateRoute;

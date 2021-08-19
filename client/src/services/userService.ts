@@ -12,7 +12,7 @@ export const getUserProfile = async (params: {
     });
     return {
       userInfo: data.userInfo,
-      userBooks: data.userBooks,
+      userBooks: data.books,
       totalPages: data.totalPages,
       totalCount: data.totalCount,
     };

@@ -3,7 +3,7 @@ import * as e from "../customTypes/bookReqCustom";
 import bookValidate from "../validation/bookValidation";
 import {
   addBook,
-  isNotDuplicatedBook,
+  insureNotDuplicatedBook,
   searchBooks,
 } from "../services/bookService";
 import { getUserByEmail } from "../services/userService";
@@ -16,7 +16,7 @@ export async function addBookController(req: e.Express.Request, res: Response) {
     await bookValidate.validate(book);
     const user = await getUserByEmail(email);
     if (!user) return res.status(400).json({ error: "user not found" });
-    await isNotDuplicatedBook(book);
+    await insureNotDuplicatedBook(book);
     await addBook(book, user?._id);
     return res.status(200).json({ meassage: "Adding book is complete" });
   } catch (err: any) {
@@ -31,8 +31,8 @@ export async function getBooksController(
   try {
     const { page = 1, limit = 10 } = req.query;
     const bookSearchDto: SearchedBookDto = {
-      limit: isNaN(+limit) || limit > 20 ? 20 : limit,
-      page: isNaN(+page) ? 1 : page,
+      limit: isNaN(+limit) || limit > 20 ? 20 : Math.ceil(limit),
+      page: isNaN(+page) ? 1 : Math.ceil(page),
       ...req.query,
     };
     const { books, totalPages, totalCount } = await searchBooks(bookSearchDto);
