@@ -1,6 +1,6 @@
 import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 const useStyles = makeStyles({
   paginatore: {
@@ -32,21 +32,31 @@ const useStyles = makeStyles({
     marginTop: 20,
   },
 });
-const PaginationContainer = (
-  { handlePageSizeChange }: any,
-  { handlePageChange }: any
-) => {
+
+interface PaginationProps {
+  count: number;
+  booksCount: number;
+  handlePageSizeChange: (pageSize: number) => void;
+  handlePageChange: (page: number) => void;
+}
+
+const PaginationContainer = (Props: PaginationProps) => {
   const classes = useStyles();
   const [pageSize, setPageSize] = useState(3);
-  const [booksCount, setBooksCount] = useState(0);
   const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
   const pageSizes = [3, 6, 9];
 
   return (
     <div className={classes.itemPerPage}>
       {"Items per Page: "}
-      <select onChange={() => handlePageSizeChange(pageSize)} value={pageSize}>
+      <select
+        onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+          setPageSize(event.target?.value as number);
+          Props.handlePageSizeChange(event.target?.value as number);
+          setPage(1);
+        }}
+        value={pageSize}
+      >
         {pageSizes.map((size) => (
           <option key={size} value={size}>
             {size}
@@ -54,17 +64,20 @@ const PaginationContainer = (
         ))}
       </select>
       {" Total Books Count: "}
-      {booksCount}
+      {Props.booksCount}
       <Pagination
         className={classes.paginatore}
-        count={count}
+        count={Props.count}
         page={page}
         siblingCount={1}
         boundaryCount={1}
         variant="outlined"
         shape="rounded"
         size="large"
-        onChange={() => handlePageChange(page)}
+        onChange={(_event: ChangeEvent<unknown>, page: number) => {
+          setPage(page);
+          Props.handlePageChange(page);
+        }}
       />
     </div>
   );

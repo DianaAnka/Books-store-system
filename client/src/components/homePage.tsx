@@ -1,11 +1,11 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import Pagination from "@material-ui/lab/Pagination";
+import { useEffect, useState } from "react";
 import { getBooks } from "../services/booksService";
 import BooksContainer from "./booksContainer";
 import { Button, makeStyles, TextField } from "@material-ui/core";
 import { IBook, QueryParams } from "../types/bookTypes";
 import AppBarMenu from "./AppBar";
 import SearchIcon from "@material-ui/icons/Search";
+import PaginationContainer from "./pagination";
 
 const useStyles = makeStyles({
   paginatore: {
@@ -43,9 +43,9 @@ const HomePage = () => {
 
   const [books, setBooks] = useState<IBook[]>([]);
   const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [pageSize, setPageSize] = useState(3);
-  const [booksCount, setBooksCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [queryIsChanged, setQueryIsChanged] = useState(false);
@@ -55,14 +55,13 @@ const HomePage = () => {
     abstract: "",
   });
   const [anyField, setAnyField] = useState("");
-  const pageSizes = [3, 6, 9];
 
-  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (value: number) => {
     setPage(value);
   };
 
-  const handlePageSizeChange = (event: any) => {
-    setPageSize(event.target?.value);
+  const handlePageSizeChange = (value: number) => {
+    setPageSize(value);
     setPage(1);
   };
 
@@ -94,8 +93,8 @@ const HomePage = () => {
         setIsError(false);
         const { books, totalPages, totalCount } = await getBooks(params);
         setBooks(books);
-        setCount(totalPages);
-        setBooksCount(totalCount);
+        setTotalPages(totalPages);
+        setTotalCount(totalCount);
       } catch (e) {
         setIsError(true);
       } finally {
@@ -178,31 +177,14 @@ const HomePage = () => {
             </Button>
           </div>
 
-          <div className={classes.itemPerPage}>
-            {"Items per Page: "}
-            <select onChange={handlePageSizeChange} value={pageSize}>
-              {pageSizes.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-            {" Total Books Count: "}
-            {booksCount}
-            <Pagination
-              className={classes.paginatore}
-              count={count}
-              page={page}
-              siblingCount={1}
-              boundaryCount={1}
-              variant="outlined"
-              shape="rounded"
-              size="large"
-              onChange={handlePageChange}
-            />
-          </div>
+          <PaginationContainer
+            count={totalPages}
+            booksCount={totalCount}
+            handlePageChange={handlePageChange}
+            handlePageSizeChange={handlePageSizeChange}
+          />
         </div>
-        <BooksContainer books={books}></BooksContainer>
+        <BooksContainer books={books} />
       </div>
     </>
   );
