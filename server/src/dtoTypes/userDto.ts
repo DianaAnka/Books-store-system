@@ -1,15 +1,15 @@
 import { ObjectId } from "mongoose";
 
-export interface RegisterUserDto {
+export interface RegisterUserDTO {
   email: string;
   password: string;
 }
 
-export interface LoginUserDto {
+export interface LoginUserDTO {
   email: string;
   password: string;
 }
 
-export interface UpdateUserProfilePicDto {
+export interface UpdateUserProfilePicDTO {
   profilePic: string;
 }

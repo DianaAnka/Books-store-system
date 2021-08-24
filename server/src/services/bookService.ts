@@ -1,19 +1,21 @@
-import { IBook } from "../types/book";
 import Book from "../models/book";
-import { SearchedBookDto, UserBookDto } from "../dtoTypes/bookDto";
+import { AddBookDTO, GetBooksDTO, UserBookDTO } from "../dtoTypes/bookDTO";
 import { ObjectId } from "mongoose";
 
-export async function insureNotDuplicatedBook(book: IBook) {
+export async function ensureNotDuplicatedBook(
+  book: AddBookDTO,
+  userId: ObjectId
+) {
   const bookExisted = await Book.findOne({
     author: book.author,
     title: book.title,
-    userId: book.userId,
+    userId: userId,
   });
   if (bookExisted) throw new Error("Book already exists");
 }
 
-export async function addBook(data: IBook, id: ObjectId) {
-  const book = new Book({ ...data, userId: id });
+export async function addBook(addBookDTO: AddBookDTO, userId: ObjectId) {
+  const book = new Book({ ...addBookDTO, userId });
   await book.save();
 }
 
@@ -45,22 +47,28 @@ async function getBooks(query: object, limit: number, page: number) {
   return { books, totalPages, totalCount };
 }
 
-export async function searchBooks(searchedBookDto: SearchedBookDto) {
-  const query = buildSearchQuery(searchedBookDto);
+export async function searchBooks(searchedBookDTO: GetBooksDTO) {
+  const query = buildSearchQuery(searchedBookDTO);
   const { books, totalPages, totalCount } = await getBooks(
     query,
-    searchedBookDto.limit,
-    searchedBookDto.page
+    searchedBookDTO.limit,
+    searchedBookDTO.page
   );
   return { books, totalPages, totalCount };
 }
 
-export async function getBooksByUserId(userBookDto: UserBookDto) {
-  const query = { userId: userBookDto.userId };
+export async function getBooksByUserId(userBookDTO: UserBookDTO) {
+  const query = { userId: userBookDTO.userId };
   const { books, totalPages, totalCount } = await getBooks(
     query,
-    userBookDto.limit,
-    userBookDto.page
+    userBookDTO.limit,
+    userBookDTO.page
   );
   return { books, totalPages, totalCount };
+}
+
+export async function getBookById(id: ObjectId) {
+  const book = await Book.findById(id);
+  if (!book) throw new Error("Book not found");
+  return book;
 }

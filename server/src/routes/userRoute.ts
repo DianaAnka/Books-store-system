@@ -3,15 +3,15 @@ import * as userController from "../controllers/userController";
 import getUserIdentity from "../middlewares/getUserIdentityMiddleware";
 import uploadFile from "../middlewares/uploadMiddleware";
 
-const userRoute: Router = Router();
+const userRoutes: Router = Router();
 
-userRoute.get("/me", getUserIdentity, userController.getUserController);
+userRoutes.get("/me", getUserIdentity, userController.getUserController);
 
-userRoute.put(
+userRoutes.put(
   "/updateProfile",
   uploadFile,
   getUserIdentity,
   userController.updateUserProfilePicController
 );
 
-export default userRoute;
+export default userRoutes;

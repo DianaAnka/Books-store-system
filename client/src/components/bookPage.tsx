@@ -9,6 +9,7 @@ const useStyles = makeStyles({
     display: "block",
     background: "bisque",
     marginTop: "200px",
+    
   },
   userSection: {
     position: "relative",
@@ -22,6 +23,8 @@ const useStyles = makeStyles({
   },
   userTable: {
     width: "100%",
+    backgroundColor: " #d9e4f5",
+    backgroundImage: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
   },
   addImageIcon: {
     position: "absolute",

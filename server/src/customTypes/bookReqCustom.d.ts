@@ -9,5 +9,6 @@ export namespace Express {
     email?: any;
     searchQuery?: string;
     params?: any;
+    user?: IUser;
   }
 }

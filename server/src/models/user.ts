@@ -34,9 +34,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
 );
 
 userSchema.pre("save", function (next) {
-  // Check if document is new or a new password has been set
   if (this.isNew || this.isModified("password")) {
-    // Saving reference to this because of changing scopes
     const document = this;
     hash(document.password, saltRounds, function (err, hashedPassword) {
       if (err) {
@@ -51,7 +49,7 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.isCorrectPassword =  function (password: string, callback) {
+userSchema.methods.isCorrectPassword = function (password: string, callback) {
   compare(password, this.password, function (err, same) {
     if (err) {
       callback(err);

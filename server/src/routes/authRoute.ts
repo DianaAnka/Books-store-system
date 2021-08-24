@@ -2,14 +2,14 @@ import { Router } from "express";
 import * as authController from "../controllers/authController";
 import getUserIdentity from "../middlewares/getUserIdentityMiddleware";
 
-const router: Router = Router();
+const authRoutes: Router = Router();
 
-router.post("/register", authController.registerController);
+authRoutes.post("/register", authController.registerController);
 
-router.post("/login", authController.loginController);
+authRoutes.post("/login", authController.loginController);
 
-router.get("/isLoggedIn", getUserIdentity, authController.isLoggedInController);
+authRoutes.get("/isLoggedIn", getUserIdentity, authController.isLoggedInController);
 
-router.post("/logout", authController.logOutController);
+authRoutes.post("/logout", authController.logOutController);
 
-export default router;
+export default authRoutes;

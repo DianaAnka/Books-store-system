@@ -1,21 +1,21 @@
 import {
-  LoginUserDto,
-  RegisterUserDto,
-  UpdateUserProfilePicDto,
-} from "../dtoTypes/userDto";
-import { isCorrectPassword } from "../lib/verifyPassword";
+  LoginUserDTO,
+  RegisterUserDTO,
+  UpdateUserProfilePicDTO,
+} from "../dtoTypes/userDTO";
+import { isCorrectPassword } from "../lib/bcryptHandler";
 import User from "../models/user";
 
-export function getUserByEmail(email: string) {
-  return User.findOne({ email: email }).exec();
+export async function getUserByEmail(email: string) {
+  return await User.findOne({ email: email }).exec();
 }
 
-export async function addNewUser(userDto: RegisterUserDto) {
-  const user = new User(userDto);
+export async function addNewUser(userDTO: RegisterUserDTO) {
+  const user = new User(userDTO);
   await user.save();
 }
 
-export async function loginUser(data: LoginUserDto) {
+export async function loginUser(data: LoginUserDTO) {
   const user = await getUserByEmail(data.email);
   if (!user) throw new Error("Incorrect email or password");
   if (!(await isCorrectPassword(data.password, user)))
@@ -24,8 +24,13 @@ export async function loginUser(data: LoginUserDto) {
 
 export async function updateUserByEmail(
   email: string,
-  updatedUserDto: UpdateUserProfilePicDto
+  updatedUserDTO: UpdateUserProfilePicDTO
 ) {
-  const user = await User.findOneAndUpdate({ email }, updatedUserDto).exec();
+  const user = await User.findOneAndUpdate({ email }, updatedUserDTO).exec();
   return user;
+}
+
+export async function checkDuplicateEmail(email: string) {
+  const userExisting = await getUserByEmail(email);
+  if (userExisting) throw new Error("Error email exists");
 }

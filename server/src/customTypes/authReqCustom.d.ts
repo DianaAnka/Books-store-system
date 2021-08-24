@@ -9,5 +9,6 @@ export namespace Express {
     query: any;
     file?: any;
     params: any;
+    user?: IUser;
   }
 }
