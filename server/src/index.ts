@@ -3,17 +3,19 @@ import { json } from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import router from "./routes/authRoute";
-import booksRoute from "./routes/booksRoute";
-import userRoute from "./routes/userRoute";
+import authRoutes from "./routes/authRoute";
+import bookRoutes from "./routes/booksRoute";
+import userRoutes from "./routes/userRoute";
+import commentRoutes from "./routes/commentRoute";
 
 const app = express();
 app.use(json());
 app.use(cookieParser());
 app.use(cors());
-app.use("/", router);
-app.use("/", booksRoute);
-app.use("/", userRoute);
+app.use("/", authRoutes);
+app.use("/", bookRoutes);
+app.use("/", userRoutes);
+app.use("/", commentRoutes);
 app.use(express.static("images"));
 mongoose.connect(
   "mongodb://localhost:27017/bss",
