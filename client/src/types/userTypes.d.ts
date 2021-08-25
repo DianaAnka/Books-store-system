@@ -5,7 +5,7 @@ export interface IUser {
   password: string;
   profilePic: string;
   roles: [string];
-  rates: [Map<string, number>];
+  rates: Map<string, number>;
   createdAt?: string;
   updatedAt?: string;
 }

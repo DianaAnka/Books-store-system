@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import {
   LoginUserDTO,
   RegisterUserDTO,
@@ -5,6 +6,7 @@ import {
 } from "../dtoTypes/userDTO";
 import { isCorrectPassword } from "../lib/bcryptHandler";
 import User from "../models/user";
+import { IUser } from "../types/user";
 
 export async function getUserByEmail(email: string) {
   return await User.findOne({ email: email }).exec();
@@ -33,4 +35,8 @@ export async function updateUserByEmail(
 export async function checkDuplicateEmail(email: string) {
   const userExisting = await getUserByEmail(email);
   if (userExisting) throw new Error("Error email exists");
+}
+
+export async function updateUserRate(user: IUser, id: string, rate: number) {
+  await User.updateOne({ _id: user.id }, { $set: { [`rates.${id}`]: rate } });
 }

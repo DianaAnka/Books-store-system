@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoute";
 import bookRoutes from "./routes/booksRoute";
 import userRoutes from "./routes/userRoute";
 import commentRoutes from "./routes/commentRoute";
+import ratingRoutes from "./routes/ratingRoute";
 
 const app = express();
 app.use(json());
@@ -16,6 +17,7 @@ app.use("/", authRoutes);
 app.use("/", bookRoutes);
 app.use("/", userRoutes);
 app.use("/", commentRoutes);
+app.use("/", ratingRoutes);
 app.use(express.static("images"));
 mongoose.connect(
   "mongodb://localhost:27017/bss",

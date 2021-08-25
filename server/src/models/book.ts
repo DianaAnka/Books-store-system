@@ -42,9 +42,11 @@ const bookSchema: Schema = new Schema(
     },
     likesCount: {
       type: Number,
+      default: 0,
     },
     dislikesCount: {
       type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

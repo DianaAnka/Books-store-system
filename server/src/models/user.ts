@@ -26,8 +26,8 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: [String],
     },
     rates: {
-      type: Map,
-      of: { String, Number },
+      type: Object,
+      default: {},
     },
   },
   { timestamps: true }
