@@ -1,4 +1,5 @@
-export interface IUser {
+import AxiosAPIResponse from "./generalTypes";
+interface IUser {
   _id: string;
   name: string;
   email: string;
@@ -14,13 +15,15 @@ interface UserProps {
   user: IUser;
 }
 
-type userApiDataType = {
-  userInfo: IUser;
-  userBooks: [IBook];
-  totalPages: number;
-  totalCount: number;
-};
+interface UserResponse extends AxiosAPIResponse {
+  data?: {
+    userInfo: IUser;
+    userBooks: [IBook];
+    totalPages: number;
+    totalCount: number;
+  };
+}
 
-type userApiProfilePic = {
-  imageUrl: string;
-};
+interface UserProfilePicResponse extends AxiosAPIResponse {
+  data?: { imageUrl: string };
+}

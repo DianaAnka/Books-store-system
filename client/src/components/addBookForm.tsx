@@ -1,7 +1,6 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { IBook } from "../types/bookTypes";
 import { useState } from "react";
 import { addBook } from "../services/booksService";
 import { useSnackbar } from "notistack";
@@ -9,8 +8,9 @@ import { useHistory } from "react-router-dom";
 import { WithContext as ReactTags } from "react-tag-input";
 import { Tag } from "react-tag-input";
 import "../App.css";
-import AppBarMenu from "./AppBar";
+import AppBarMenu from "./appBar";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { IAddBook } from "../types/bookTypes";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 200,
       backgroundColor: "black",
       color: "white",
-      borderRadius: 16,
+      borderRadius: 4,
     },
     header: {
       textAlign: "center",
@@ -46,13 +46,12 @@ const useStyles = makeStyles((theme: Theme) =>
       color: "#7575a1",
       fontFamily: "sans-serif",
       transform: "translate(14px, 4px) scale(1)",
-      fontSize: "2em",
+      fontSize: "1em",
     },
     root: {
       height: "100vh",
       textAlign: "center",
       verticalAlign: "middle",
-      display: "flex",
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: " #d9e4f5",
@@ -62,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "16px",
       marginBottom: "8px",
       display: "inline-flex",
-      borderRadius: 13,
+      borderRadius: 4,
       border: "1px solid #c4c4c4",
       width: "98%",
       position: "relative",
@@ -74,16 +73,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     textField: {
       [`& fieldset`]: {
-        borderRadius: 13,
+        borderRadius: 4,
       },
       backgroundColor: "#f7f7f7",
-      borderRadius: 13,
+      borderRadius: 4,
     },
   })
 );
 
 const AddBookForm = (props: any) => {
-  const [book, setBook] = useState<IBook>({ title: "", author: "" });
+  const [book, setBook] = useState<IAddBook>({ title: "", author: "" });
   const [tags, setTags] = useState<Array<Tag>>([]);
   const [titleError, setTitleError] = useState("");
   const [authorError, setAuthorError] = useState("");
@@ -91,7 +90,7 @@ const AddBookForm = (props: any) => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
-  const validateBook = (book: IBook) => {
+  const validateBook = (book: IAddBook) => {
     if (book.title.length < 1) {
       setTitleError("Title is Required");
       setAuthorError("");
@@ -114,8 +113,8 @@ const AddBookForm = (props: any) => {
       await addBook(bookToAdd);
       enqueueSnackbar("Adding Book is Complete");
       history.push("/me");
-    } catch (e) {
-      enqueueSnackbar("Couldn't Add the book, Book already exists");
+    } catch (error: any) {
+      enqueueSnackbar(error.message);
     }
   };
 

@@ -4,8 +4,8 @@ import { ChangeEvent, useState } from "react";
 
 const useStyles = makeStyles({
   paginatore: {
-    marginTop: "40px",
-    marginBottom: "20px",
+    marginTop: "10vh",
+    marginBottom: "10vh",
     position: "absolute",
     left: "50%",
     transform: "translate(-50%, 0)",
@@ -34,13 +34,13 @@ const useStyles = makeStyles({
 });
 
 interface PaginationProps {
-  count: number;
-  booksCount: number;
+  count?: number;
+  booksCount?: number;
   handlePageSizeChange: (pageSize: number) => void;
   handlePageChange: (page: number) => void;
 }
 
-const PaginationContainer = (Props: PaginationProps) => {
+const PaginationContainer = (props: PaginationProps) => {
   const classes = useStyles();
   const [pageSize, setPageSize] = useState(3);
   const [page, setPage] = useState(1);
@@ -52,7 +52,7 @@ const PaginationContainer = (Props: PaginationProps) => {
       <select
         onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
           setPageSize(event.target?.value as number);
-          Props.handlePageSizeChange(event.target?.value as number);
+          props.handlePageSizeChange(event.target?.value as number);
           setPage(1);
         }}
         value={pageSize}
@@ -64,10 +64,10 @@ const PaginationContainer = (Props: PaginationProps) => {
         ))}
       </select>
       {" Total Books Count: "}
-      {Props.booksCount}
+      {props.booksCount}
       <Pagination
         className={classes.paginatore}
-        count={Props.count}
+        count={props.count}
         page={page}
         siblingCount={1}
         boundaryCount={1}
@@ -76,7 +76,7 @@ const PaginationContainer = (Props: PaginationProps) => {
         size="large"
         onChange={(_event: ChangeEvent<unknown>, page: number) => {
           setPage(page);
-          Props.handlePageChange(page);
+          props.handlePageChange(page);
         }}
       />
     </div>

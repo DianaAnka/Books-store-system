@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { IBook } from "../types/bookTypes";
-import { IUser } from "../types/userTypes";
 import { getUserProfile } from "../services/userService";
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import AppBarMenu from "./AppBar";
+import AppBarMenu from "./appBar";
 import BooksContainer from "./booksContainer";
 import PaginationContainer from "./pagination";
 import UserInfoContainer from "./userInfoContainer";
+import { IBook } from "../types/bookTypes";
+import { IUser } from "../types/userTypes";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,10 +21,10 @@ const Profile = () => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser>();
   const [profilePic, setProfilePic] = useState<string | undefined>(undefined);
-  const [userBooks, setUserBooks] = useState<IBook[]>([]);
+  const [userBooks, setUserBooks] = useState<IBook[]| undefined>([]);
   const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const [booksCount, setBooksCount] = useState(0);
+  const [count, setCount] = useState<number| undefined>(0);
+  const [booksCount, setBooksCount] = useState<number| undefined>(0);
   const [pageSize, setPageSize] = useState(3);
   const history = useHistory();
 
@@ -40,16 +40,15 @@ const Profile = () => {
   useEffect(() => {
     (async () => {
       try {
-        const { userInfo, userBooks, totalPages, totalCount } =
-          await getUserProfile({
-            page: page,
-            limit: pageSize,
-          });
-        setUser(userInfo);
-        setProfilePic(userInfo.profilePic);
-        setUserBooks(userBooks);
-        setCount(totalPages);
-        setBooksCount(totalCount);
+        const { data } = await getUserProfile({
+          page: page,
+          limit: pageSize,
+        });
+        setUser(data?.userInfo);
+        setProfilePic(data?.userInfo.profilePic);
+        setUserBooks(data?.userBooks);
+        setCount(data?.totalPages);
+        setBooksCount(data?.totalCount);
       } catch (e) {
         history.push("/homePage");
       }

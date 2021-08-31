@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: " #d9e4f5",
       backgroundImage: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
     },
+    logoImg: {
+      height: "12vh",
+    },
   })
 );
 
@@ -189,15 +192,19 @@ const Login = (props: any) => {
       <form className={classes.container} noValidate autoComplete="off">
         <div className={classes.header}>
           <Link to="/homePage">
-            <img src="public/homePage.png" alt="" />
+            <img
+              className={classes.logoImg}
+              src="public/colorLOGO.png"
+              alt=""
+            />
           </Link>
           <h3>Sign In to Books Store System</h3>{" "}
         </div>
         <div>
           <TextField
+            fullWidth
             variant="outlined"
             error={state.isError}
-            fullWidth
             id="email"
             type="email"
             label="Email"
@@ -207,8 +214,8 @@ const Login = (props: any) => {
             onKeyPress={handleKeyPress}
           />
           <TextField
-            error={state.isError}
             fullWidth
+            error={state.isError}
             variant="outlined"
             id="password"
             type="password"

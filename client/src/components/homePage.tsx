@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { getBooks } from "../services/booksService";
 import BooksContainer from "./booksContainer";
 import { Button, makeStyles, TextField } from "@material-ui/core";
-import { IBook, QueryParams } from "../types/bookTypes";
-import AppBarMenu from "./AppBar";
+import AppBarMenu from "./appBar";
 import SearchIcon from "@material-ui/icons/Search";
 import PaginationContainer from "./pagination";
+import {  IBook, QueryParams } from "../types/bookTypes";
 
 const useStyles = makeStyles({
   paginatore: {
-    marginTop: "40px",
-    marginBottom: "20px",
+    marginTop: "10vh",
+    marginBottom: "10vh",
     position: "absolute",
     left: "50%",
     transform: "translate(-50%, 0)",
@@ -41,11 +41,11 @@ const useStyles = makeStyles({
 const HomePage = () => {
   const classes = useStyles();
 
-  const [books, setBooks] = useState<IBook[]>([]);
+  const [books, setBooks] = useState<IBook[] | undefined>([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState<number | undefined>(0);
   const [pageSize, setPageSize] = useState(3);
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState<number | undefined>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [queryIsChanged, setQueryIsChanged] = useState(false);
@@ -91,14 +91,12 @@ const HomePage = () => {
     (async () => {
       try {
         setIsError(false);
-        const { books, totalPages, totalCount } = await getBooks(params);
-        setBooks(books);
-        setTotalPages(totalPages);
-        setTotalCount(totalCount);
-      } catch (e) {
+        const { data } = await getBooks(params);
+        setBooks(data?.books);
+        setTotalPages(data?.totalPages);
+        setTotalCount(data?.totalCount);
+      } catch (error) {
         setIsError(true);
-      } finally {
-        setIsLoading(false);
       }
     })();
   }, [page, pageSize, queryIsChanged]);

@@ -1,5 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
-import AppBarMenu from "./AppBar";
+import CommentsContainer from "./commentsContainer";
+import AppBarMenu from "./appBar";
+import { getComments } from "../services/commentsService";
+import { useEffect, useState } from "react";
+import { handleComments } from "../lib/commentHandler";
 
 const useStyles = makeStyles({
   root: {
@@ -9,7 +13,6 @@ const useStyles = makeStyles({
     display: "block",
     background: "bisque",
     marginTop: "200px",
-    
   },
   userSection: {
     position: "relative",
@@ -51,8 +54,26 @@ const useStyles = makeStyles({
 });
 
 const BookPage = (props: any) => {
-  const data = props.location.state.data;
+  const book = props.location.state.book;
+  const [commentsTree, setCommentsTree] = useState<CommentTree[] | undefined>(
+    []
+  );
+  const [load, setLoad] = useState(false);
   const classes = useStyles();
+
+  function handleChange() {
+    console.log(load)
+    setLoad(!load);
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await getComments(book._id);
+        if (data) setCommentsTree(handleComments(data.comments));
+      } catch (e) {}
+    })();
+  }, [load]);
 
   return (
     <>
@@ -65,12 +86,12 @@ const BookPage = (props: any) => {
                 <ul className={classes.userUl}>
                   <li className={classes.userLi}>
                     <b>Author : </b>
-                    {data.author}
+                    {book.author}
                   </li>
                   <li className={classes.userLi}>
                     <b>Tags : </b>
 
-                    {data.tags?.map((tag: string) => (
+                    {book.tags?.map((tag: string) => (
                       <> {tag}</>
                     ))}
                   </li>
@@ -83,16 +104,16 @@ const BookPage = (props: any) => {
                     <h1>
                       {" "}
                       <b>Title : </b>
-                      {data.title}
+                      {book.title}
                     </h1>
                   </li>
                   <li className={classes.userLi}>
                     <b>Abstract : </b>
-                    {data.abstract}
+                    {book.abstract}
                   </li>
                   <li className={classes.userLi}>
                     <b>content : </b>
-                    {data.content}
+                    {book.content}
                   </li>
                   <li className={classes.userLi}></li>
                 </ul>
@@ -100,6 +121,7 @@ const BookPage = (props: any) => {
             </tr>
           </tbody>
         </table>
+        <CommentsContainer commentsTree={commentsTree} bookId={book._id} onChange={handleChange}/>
       </div>
     </>
   );

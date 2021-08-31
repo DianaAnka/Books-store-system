@@ -4,21 +4,25 @@ import { IBook } from "../types/bookTypes";
 
 const useStyles = makeStyles({
   flexContainer: {
-    marginTop: "8%",
-    width: "70%",
-    columnCount: 3,
+    marginTop: "25vh",
+    width: "100%",
+    display: "inline-block",
     listStyleType: "none",
     marginLeft: "auto",
     marginRight: "auto",
   },
   item: {
-    height: "80vh",
-    width: "100%",
+    display: "block",
+    height: "10%",
+    width: "30%",
+    float: "left",
     paddingBottom: "25vh",
+    marginRight: "1vh",
   },
 });
-const BooksContainer = (props: { books: IBook[] }) => {
+const BooksContainer = (props: { books?: IBook[] }) => {
   const classes = useStyles();
+  
   return (
     <ul className={classes.flexContainer}>
       {props.books &&

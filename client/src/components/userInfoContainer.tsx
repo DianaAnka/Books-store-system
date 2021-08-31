@@ -91,8 +91,8 @@ const UserInfoContainer = (Props: UserInfoProps) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     try {
-      const { imageUrl } = await updateUserProfilePic(formData);
-      setProfilePic(imageUrl);
+      const { data } = await updateUserProfilePic(formData);
+      setProfilePic(data?.imageUrl);
     } catch (e) {
       enqueueSnackbar(
         "Error has occured, couldn't update the profile picture "

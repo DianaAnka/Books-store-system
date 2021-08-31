@@ -1,5 +1,9 @@
-import axios, { AxiosResponse } from "axios";
-import { BooksApiDataType, IBook } from "../types/bookTypes";
+import axios from "axios";
+import {
+  AddBookResponse,
+  GetBooksResponse,
+  IAddBook,
+} from "../types/bookTypes";
 
 export const getBooks = async (params: {
   page: number;
@@ -8,22 +12,20 @@ export const getBooks = async (params: {
   author?: string;
   title?: string;
   abstract?: string;
-}): Promise<BooksApiDataType> => {
-  const { data } = await axios.get("/books", {
-    params,
-  });
-  return {
-    books: data.books,
-    totalPages: data.totalPages,
-    totalCount: data.totalCount,
-  };
+}): Promise<GetBooksResponse> => {
+  try {
+    return await axios.get("/books", {
+      params,
+    });
+  } catch (error: any) {
+    throw new Error("Error ");
+  }
 };
 
-export const addBook = async (book: IBook): Promise<AxiosResponse> => {
-  const res = await axios.post(
-    "/addBook",
-    { book },
-    { withCredentials: true }
-  );
-  return res;
+export const addBook = async (book: IAddBook): Promise<AddBookResponse> => {
+  try {
+    return await axios.post("/book", { book }, { withCredentials: true });
+  } catch (error: any) {
+    throw new Error("Error ");
+  }
 };

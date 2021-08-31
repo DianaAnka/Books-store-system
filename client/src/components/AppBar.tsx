@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       fontFamily: "Open Sans Condensed",
       fontSize: "1.5em",
-      flexGrow: 1,
+      flexGrow: 2,
       backgroundColor: "white",
       color: "black",
     },
@@ -27,13 +27,17 @@ const useStyles = makeStyles((theme: Theme) =>
     links: {
       fontFamily: "Open Sans Condensed",
       textDecoration: "none",
-      marginLeft: "70%",
+      marginLeft: "60%",
       paddingRight: 20,
     },
     titleLink: {
       fontFamily: "Open Sans Condensed",
       textDecoration: "none",
       flexGrow: 1,
+    },
+    logoImg: {
+      height: "auto",
+      width: "20vw",
     },
   })
 );
@@ -65,7 +69,11 @@ const AppBarMenu = (props: any) => {
       <AppBar style={{ background: "white" }} position="static">
         <Toolbar>
           <Link className={classes.titleLink} to="/homePage">
-            <img src="public/logo.png" alt="" />
+            <img
+              className={classes.logoImg}
+              src="public/colorLOGO.png"
+              alt=""
+            />
           </Link>
           <Link className={classes.links} to="/me">
             {store.user?.email}

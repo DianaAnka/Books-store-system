@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: " #d9e4f5",
       backgroundImage: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
     },
+    logoImg: {
+      height: "12vh",
+    },
   })
 );
 
@@ -186,7 +189,11 @@ const Register = (props: any) => {
       <form className={classes.container} noValidate autoComplete="off">
         <div className={classes.header}>
           <Link to="/homePage">
-            <img src="public/homePage.png" alt="" />
+            <img
+              className={classes.logoImg}
+              src="public/colorLOGO.png"
+              alt=""
+            />
           </Link>
           <h3>Sign Up to Books Store System</h3>{" "}
         </div>
