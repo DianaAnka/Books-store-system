@@ -8,7 +8,7 @@ authRoutes.post("/register", authController.registerController);
 
 authRoutes.post("/login", authController.loginController);
 
-authRoutes.get("/isLoggedIn", getUserIdentity, authController.isLoggedInController);
+authRoutes.get("/users/me", getUserIdentity, authController.isLoggedInController);
 
 authRoutes.post("/logout", authController.logOutController);
 

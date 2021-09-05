@@ -7,9 +7,10 @@ import {
 } from "../services/userService";
 import { generateToken } from "../lib/tokenHandler";
 import { LoginUserDTO, RegisterUserDTO } from "../dtoTypes/userDTO";
+import * as e from "../customTypes/bookReqCustom";
 
 export async function registerController(req: Request, res: Response) {
-  const registerUserDTO: RegisterUserDTO = req.body;
+  const registerUserDTO: RegisterUserDTO = req.body.registerDTO;
   try {
     userValidate.validate(registerUserDTO);
     checkDuplicateEmail(registerUserDTO.email);
@@ -21,18 +22,23 @@ export async function registerController(req: Request, res: Response) {
 }
 
 export async function loginController(req: Request, res: Response) {
-  const loginUserDTO: LoginUserDTO = req.body;
+  const loginUserDTO: LoginUserDTO = req.body.loginDTO;
   try {
     await loginUser(loginUserDTO);
     const token = generateToken(loginUserDTO.email);
     res.cookie("token", token, { httpOnly: true }).sendStatus(200);
   } catch (err: any) {
+    console.log(err.message);
     return res.status(400).json({ error: err.message });
   }
 }
 
-export async function isLoggedInController(req: Request, res: Response) {
-  return res.status(200).json({ message: "Logged " });
+export async function isLoggedInController(
+  req: e.Express.Request,
+  res: Response
+) {
+  const user = req.user;
+  return res.json({ user });
 }
 
 export function logOutController(req: Request, res: Response) {
