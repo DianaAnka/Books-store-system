@@ -3,6 +3,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { Link } from "react-router-dom";
 import auth from "../auth.png";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,14 +45,15 @@ const AuthLayout: React.FC<{}> = ({ children }) => {
 
   return (
     <>
-      
       <div className={classes.root}>
-      <div className={classes.empty}></div>
+        <div className={classes.empty}></div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
+              <Link to="/home-page">
+                <LockOutlinedIcon />
+              </Link>
             </Avatar>
             {children}
           </div>

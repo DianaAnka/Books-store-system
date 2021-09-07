@@ -7,9 +7,10 @@ import {
 } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AuthLayout from "../../layouts/authLayout";
-import { login } from "../../services/authService";
+import { getUser, login } from "../../services/authService";
+import useStore from "../../store";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -24,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
+  const store = useStore((state) => state);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPasword] = useState<string>("");
@@ -32,6 +35,14 @@ const Login = () => {
     try {
       await login({ email, password });
       enqueueSnackbar("Login is complete");
+      const { user } = await (await getUser()).data;
+      store.setUser({
+        email: user.email,
+        isLogged: true,
+        profilePic: user.profilePic,
+        rates: user.rates,
+      });
+      history.push("/home-page");
     } catch (error) {
       enqueueSnackbar("Email or password is incorrect");
     }

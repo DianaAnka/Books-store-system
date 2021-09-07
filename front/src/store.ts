@@ -4,8 +4,8 @@ export interface User {
   email: string;
   isLogged: boolean;
   profilePic?: string;
-  roles?: [string];
-  rates?: Map<string, number>;
+  roles?: string[];
+  rates?: any;
 }
 
 type Store = {

@@ -13,3 +13,9 @@ export const register = (
 export const getUser = (): Promise<GetUserResponse> => {
   return axios.get("/users/me", { withCredentials: true });
 };
+
+export const logout = (): Promise<LogoutResponse> => {
+  return axios.post("/logout", {
+    withCredentials: true,
+  });
+};

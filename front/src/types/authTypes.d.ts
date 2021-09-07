@@ -18,4 +18,8 @@ interface LoginResponse extends Response<{ response: boolean }> {}
 interface RegisterResponse extends Response<{ response: boolean }> {}
 
 interface GetUserResponse
-  extends Response<{ user: { email: string; profilePic: string } }> {}
+  extends Response<{
+    user: { email: string; profilePic: string; rates: any };
+  }> {}
+
+interface LogoutResponse extends Response<{ response: boolean }> {}
