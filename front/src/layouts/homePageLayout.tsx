@@ -3,7 +3,7 @@ import { Carousel } from "react-carousel-minimal";
 import slider1 from "../sliderImgs/slider1.jpg";
 import slider2 from "../sliderImgs/slider2.jpg";
 import slider3 from "../sliderImgs/slider3.jpg";
-import { Container } from "@material-ui/core";
+import { Container, useMediaQuery } from "@material-ui/core";
 import Footer from "../components/footer";
 
 const HomePageLayout: React.FC<{}> = ({ children }) => {

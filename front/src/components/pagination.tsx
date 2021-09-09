@@ -1,66 +1,115 @@
-import { Box, makeStyles, useMediaQuery } from "@material-ui/core";
-import { ChangeEvent, useState } from "react";
-import Pagination from "@material-ui/lab/Pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Grid, makeStyles, useMediaQuery } from "@material-ui/core";
+import { useState } from "react";
 
 const useStyles = makeStyles(() => ({
+  root: {
+    position: "relative",
+    height: 40,
+    padding: "30px 0",
+  },
+  title: {
+    display: "inline-block",
+    position: "relative",
+    background: " #e5e2e2",
+    padding: 0,
+    border: 0,
+    textAlign: "left",
+    margin: 0,
+    font: "700 24px/20px 'Roboto Slab', serif",
+    letterSpacing: "0.6px",
+    textTransform: "uppercase",
+  },
   itemSize: {
     textTransform: "capitalize",
     font: "700 24px/20px 'Roboto Slab', serif",
     marginTop: "10px",
     textAlign: "center",
   },
+  arrowscontainer: {
+    display: "inline-block",
+    float: "right",
+    margin: "auto",
+  },
+  arrow: {
+    border: 0,
+    WebkitTapHighlightColor: "transparent",
+    width: "30px",
+    height: "30px",
+    padding: "8px 15px",
+    textAlign: "center",
+    background: "#ffffff",
+    color: "#ff0000",
+    marginLeft: "10px",
+    "&:hover": {
+      color: "white",
+      background: "red",
+    },
+  },
 }));
 
 interface PaginationProps {
+  title: string;
   count?: number;
   booksCount?: number;
-  pageSize: number;
   page: number;
-  handlePageSizeChange: (pageSize: number) => void;
   handlePageChange: (page: number) => void;
 }
 
 const PaginationContainer = (props: PaginationProps) => {
   const classes = useStyles();
-  const [pageSize, setPageSize] = useState(props.pageSize);
   const [page, setPage] = useState(props.page);
-  const pageSizes = [3, 6, 9];
   const matches = useMediaQuery("(min-width:300px)");
+
+  const handleLeftArrow = () => {
+    let temp = page;
+    if (page !== 1) {
+      temp = page - 1;
+      setPage(temp);
+    } else if (props.count) {
+      temp = props.count;
+      setPage(props.count);
+    }
+    if (temp) props.handlePageChange(temp);
+  };
+
+  const handleRightArrow = () => {
+    let temp = page;
+    if (page !== props.count) {
+      temp = page + 1;
+      setPage(page + 1);
+    } else {
+      temp = 1;
+      setPage(1);
+    }
+    props.handlePageChange(temp);
+  };
 
   return (
     <>
-      <div className={classes.itemSize}>
-        {"Items per Page: "}
-        <select
-          onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-            console.log("page ", event.target?.value);
-            setPageSize(event.target?.value as number);
-            props.handlePageSizeChange(event.target?.value as number);
-          }}
-          value={pageSize}
-        >
-          {pageSizes.map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <Box display="flex" justifyContent="center">
-          <Pagination
-            className={classes.itemSize}
-            count={props.count}
-            defaultPage={1}
-            siblingCount={0}
-            page={page}
-            onChange={(_event: ChangeEvent<unknown>, page: number) => {
-              setPage(page);
-              props.handlePageChange(page);
-            }}
-            boundaryCount={matches ? 1 : 0}
-          />
-        </Box>
+      <div className={classes.root}>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={8} md={10} lg={11} sm={5}>
+            <div
+              className={classes.title}
+              style={{ fontSize: matches ? "20px" : "30px" }}
+            >
+              {props.title}
+            </div>
+          </Grid>
+          <Grid item>
+            <FontAwesomeIcon
+              onClick={handleLeftArrow}
+              className={classes.arrow}
+              icon={["fas", "angle-left"]}
+            />
+            <FontAwesomeIcon
+              onClick={handleRightArrow}
+              className={classes.arrow}
+              icon={["fas", "angle-right"]}
+            />
+          </Grid>
+        </Grid>
       </div>
     </>
   );

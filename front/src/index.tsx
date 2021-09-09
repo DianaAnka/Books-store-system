@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { SnackbarProvider } from "notistack";
 import "@fontsource/roboto-slab";
+import "./icons";
 
 ReactDOM.render(
   <React.StrictMode>

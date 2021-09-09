@@ -18,32 +18,46 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       marginRight: "auto",
       marginLeft: "auto",
+      padding: "0 auto 0 auto",
     },
     paper: {
       padding: theme.spacing(1),
       textAlign: "center",
       color: theme.palette.text.secondary,
       backgroundColor: "#e5e2e2",
+      width: "200px",
+      height: "auto",
+      display: "inline-block",
+      justifyContent: "center",
+    },
+    row: {
+      float: "left",
     },
   })
 );
 
 interface BooksContainerProps {
-  books: GetBooksDTO[];
+  books: GetBookDTO[];
 }
 
 const BooksContainer = (props: BooksContainerProps) => {
+  const matches = useMediaQuery("(min-width:500px)");
   const classes = useStyles();
-  const matches = useMediaQuery("(min-width:600px)");
 
-  function FormRow(props: { book: GetBooksDTO }) {
+
+  function FormRow(props: { books: GetBookDTO[] }) {
     return (
       <React.Fragment>
-        <Grid item xs={12}>
-          <Paper elevation={0} className={classes.paper}>
-            <BookCard book={props.book} />
-          </Paper>
-        </Grid>
+        {props.books &&
+          props.books.map((book, index) => (
+            <Paper
+              elevation={0}
+              style={{ margin: matches ? "1% 1%" : "0 auto" }}
+              className={classes.paper}
+            >
+              <BookCard book={book} />
+            </Paper>
+          ))}
       </React.Fragment>
     );
   }
@@ -51,13 +65,16 @@ const BooksContainer = (props: BooksContainerProps) => {
     <>
       <Box display="flex" justifyContent="center">
         <div className={classes.root}>
-          <Grid container spacing={2}>
-            {props.books &&
-              props.books.map((book, index) => (
-                <Grid container item xs={matches ? 4 : 12} spacing={0}>
-                  <FormRow book={book} />
-                </Grid>
-              ))}
+          <Grid container spacing={9}>
+            <Grid container item className={classes.row}>
+              <FormRow books={props.books.slice(0, 5)} />
+            </Grid>
+            <Grid container item className={classes.row}>
+              <FormRow books={props.books.slice(5, 10)} />
+            </Grid>
+            <Grid container item className={classes.row}>
+              <FormRow books={props.books.slice(10, 15)} />
+            </Grid>
           </Grid>
         </div>
       </Box>

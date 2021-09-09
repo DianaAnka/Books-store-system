@@ -1,5 +1,7 @@
 import {
   Box,
+  CircularProgress,
+  Container,
   createStyles,
   makeStyles,
   TextField,
@@ -28,10 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const HomePage = () => {
   const classes = useStyles();
-  const [books, setBooks] = useState<GetBooksDTO[]>([]);
+  const [books, setBooks] = useState<GetBookDTO[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number | undefined>(0);
-  const [pageSize, setPageSize] = useState(3);
   const [totalCount, setTotalCount] = useState<number | undefined>(0);
   const [anyField, setAnyField] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -39,15 +40,10 @@ const HomePage = () => {
   const debouncedSearchTerm = useDebounce(anyField, 500);
   const matches = useMediaQuery("(max-width:991px)");
 
-  const handlePageSizeChange = (value: number) => {
-    setPageSize(value);
-    setPage(1);
-  };
-
   useEffect(() => {
     const params = {
       page: page,
-      limit: pageSize,
+      limit: 15,
       anyField: anyField,
     };
     (async () => {
@@ -63,7 +59,7 @@ const HomePage = () => {
         setIsError(true);
       }
     })();
-  }, [page, pageSize, debouncedSearchTerm]);
+  }, [page, debouncedSearchTerm]);
 
   return (
     <>
@@ -95,28 +91,39 @@ const HomePage = () => {
             autoFocus
             placeholder="search any field"
             onChange={(e) => {
-              console.log("1 ", anyField);
               setAnyField(e.target.value);
-              console.log("2 ", anyField);
             }}
           />
         </Box>
+
         {isError ? (
           <div>Error </div>
         ) : isLoading ? (
-          <>loading</>
+          <Box
+            width="75%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            marginLeft="auto"
+            marginRight="auto"
+          >
+            <CircularProgress size={200} />
+          </Box>
         ) : (
-          <BooksContainer books={books} />
+          <>
+            <Container>
+              <PaginationContainer
+                title="our collection"
+                count={totalPages}
+                booksCount={totalCount}
+                page={page}
+                handlePageChange={(value) => setPage(value)}
+              />
+              <BooksContainer books={books} />
+            </Container>
+          </>
         )}
         {books.length === 0 ? <>no results to show </> : <></>}
-        <PaginationContainer
-          count={totalPages}
-          booksCount={totalCount}
-          pageSize={pageSize}
-          page={page}
-          handlePageChange={(value) => setPage(value)}
-          handlePageSizeChange={handlePageSizeChange}
-        />
       </HomePageLayout>
     </>
   );

@@ -1,4 +1,4 @@
-interface GetBooksDTO {
+interface GetBookDTO {
   _id: string;
   title: string;
   author: string;
@@ -7,7 +7,14 @@ interface GetBooksDTO {
 
 interface GetBooksResponse
   extends Response<{
-    books: GetBooksDTO[];
+    books: GetBookDTO[];
     totalPages: number;
     totalCount: number;
   }> {}
+
+interface GetBookResponse
+  extends Response<{
+    book: GetBookDTO;
+  }> {}
+
+interface PutRateResponse extends Response<{ response: boolean }> {}
