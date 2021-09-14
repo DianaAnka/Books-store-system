@@ -20,5 +20,5 @@ export interface AddBookDTO{
   title: string;
   content: string;
   abstract: string;
-  tags: [string];
+  tags: string[];
 }

@@ -1,66 +1,83 @@
-import { ObjectId } from "mongoose";
+import { ObjectId, Schema } from "mongoose";
 import Book from "../models/book";
 import { IBook } from "../types/book";
 import { IUser } from "../types/user";
-import { getBookById } from "./bookService";
+import { ensureBookExist, getBookById } from "./bookService";
 import { updateUserRate } from "./userService";
 
 export async function updateLikesCountOfBookById(id: ObjectId, user: IUser) {
+  await ensureBookExist(id);
   const book = await getBookById(id);
-  const query = buildLikeQuery(
-    book,
-    ensureUserNotRateBook(user, id.toString())
-  );
-  await updateBookRate(id, query);
-  await updateUserRate(
-    user,
-    id.toString(),
-    ensureUserNotRateBook(user, id.toString()) ? 1 : 0
-  );
+  const prevRate = getUserRateByBook(user, id.toString());
+  await updateBookLikesCount(prevRate, id, book, user);
+}
+
+async function updateBookLikesCount(
+  prevRate: any,
+  id: Schema.Types.ObjectId,
+  book: IBook | null,
+  user: IUser
+) {
+  if (prevRate == -1) {
+    await decreaseDislikesCount(id, book!);
+    await increaseLikesCount(id, book!);
+    await updateUserRate(user, id.toString(), 1);
+  } else if (prevRate == 1) {
+    await decreaseLikesCount(id, book!);
+    await updateUserRate(user, id.toString(), 0);
+  } else {
+    await increaseLikesCount(id, book!);
+    await updateUserRate(user, id.toString(), 1);
+  }
 }
 
 export async function updateDislikesCountOfBookById(id: ObjectId, user: IUser) {
+  await ensureBookExist(id);
   const book = await getBookById(id);
-  const query = buildDislikeQuery(
-    book,
-    ensureUserNotRateBook(user, id.toString())
-  );
-  await updateBookRate(id, query);
-  await updateUserRate(
-    user,
-    id.toString(),
-    ensureUserNotRateBook(user, id.toString()) ? -1 : 0
-  );
+  const prevRate = getUserRateByBook(user, id.toString());
+  await updateBookDislikeCount(prevRate, id, book, user);
 }
 
-function buildLikeQuery(book: IBook, rate: boolean) {
-  let query = rate
-    ? { likesCount: book.likesCount + 1 }
-    : { likesCount: book.likesCount - 1 };
-  return query;
+async function updateBookDislikeCount(
+  prevRate: any,
+  id: Schema.Types.ObjectId,
+  book: IBook | null,
+  user: IUser
+) {
+  if (prevRate == 1) {
+    await decreaseLikesCount(id, book!);
+    await increaseDislikesCount(id, book!);
+    await updateUserRate(user, id.toString(), -1);
+  } else if (prevRate == -1) {
+    await decreaseDislikesCount(id, book!);
+    await updateUserRate(user, id.toString(), 0);
+  } else {
+    await increaseDislikesCount(id, book!);
+    await updateUserRate(user, id.toString(), -1);
+  }
 }
 
-function buildDislikeQuery(book: IBook, rate: boolean) {
-  let query = rate
-    ? { dislikesCount: book.dislikesCount + 1 }
-    : { dislikesCount: book.dislikesCount - 1 };
-  return query;
+export function increaseLikesCount(id: ObjectId, book: IBook) {
+  return Book.findByIdAndUpdate(id, { likesCount: book.likesCount + 1 });
 }
 
-export async function updateBookRate(_id: ObjectId, query: object) {
-  return await Book.findByIdAndUpdate(_id, query);
+export function decreaseLikesCount(id: ObjectId, book: IBook) {
+  return Book.findByIdAndUpdate(id, { likesCount: book.likesCount - 1 });
+}
+
+export function increaseDislikesCount(id: ObjectId, book: IBook) {
+  return Book.findByIdAndUpdate(id, { dislikesCount: book.dislikesCount + 1 });
+}
+
+export function decreaseDislikesCount(id: ObjectId, book: IBook) {
+  return Book.findByIdAndUpdate(id, { dislikesCount: book.dislikesCount - 1 });
 }
 
 export function ensureUserNotRateBook(user: IUser, id: string) {
   return !(id in user.rates && user.rates[id] != 0);
 }
 
-export function checkPrevLike(user: IUser, id: string) {
-  if (id in user.rates && user.rates[id] == 1)
-    throw new Error("You have already rate this book with the opposite rate");
-}
-
-export function checkPrevDislike(user: IUser, id: string) {
-  if (id in user.rates && user.rates[id] == -1)
-    throw new Error("You have already rate this book with the opposite rate");
+export function getUserRateByBook(user: IUser, bookId: string) {
+  if (bookId in user.rates) return user.rates[bookId];
+  return 0;
 }

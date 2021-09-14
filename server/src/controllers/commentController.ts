@@ -1,5 +1,4 @@
 import * as e from "../customTypes/commentReqCustom";
-import { getBookById } from "../services/bookService";
 import {
   addComment,
   checkCommentOwnership,
@@ -12,16 +11,19 @@ import {
 import commentValidate from "../validation/commentValidation";
 import { Response } from "express";
 import { AddCommentDTO, UpdateCommentDTO } from "../dtoTypes/commentDTO";
+import { ensureBookExist } from "../services/bookService";
 
 export async function addCommentController(
   req: e.Express.Request,
   res: Response
 ) {
   const addCommentDTO: AddCommentDTO = req.body.comment;
+  const { id } = req.params;
+  addCommentDTO.bookId = id;
   const user = req.user;
   try {
     await commentValidate.validate(addCommentDTO);
-    await getBookById(addCommentDTO.bookId);
+    await ensureBookExist(addCommentDTO.bookId);
     checkCommentParent(addCommentDTO);
     await addComment(addCommentDTO, user!);
     return res.status(200).json({ meassage: "Adding comment is complete" });
@@ -70,9 +72,9 @@ export async function getCommentsByBookController(
 ) {
   const { id } = req.params;
   try {
-    await getBookById(id);
+    await ensureBookExist(id);
     const comments = await getCommentByBookId(id);
-    res.json({ comments });
+    res.status(200).json({ comments });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import {
   LoginUserDTO,
   RegisterUserDTO,
@@ -6,6 +5,7 @@ import {
 } from "../dtoTypes/userDTO";
 import { isCorrectPassword } from "../lib/bcryptHandler";
 import User from "../models/user";
+import Comment from "../models/comment";
 import { IUser } from "../types/user";
 
 export async function getUserByEmail(email: string) {
@@ -28,8 +28,24 @@ export async function updateUserByEmail(
   email: string,
   updatedUserDTO: UpdateUserProfilePicDTO
 ) {
-  const user = await User.findOneAndUpdate({ email }, updatedUserDTO).exec();
-  return user;
+  const userUpdated = await User.findOneAndUpdate(
+    { email },
+    updatedUserDTO
+  ).exec();
+  if (userUpdated) {
+    const user = {
+      _id: userUpdated._id,
+      email: userUpdated.email,
+      profilePic: userUpdated.profilePic,
+    };
+    const userAfterUpdating = {
+      _id: userUpdated._id,
+      email: userUpdated.email,
+      profilePic: updatedUserDTO.profilePic,
+    };
+    await Comment.updateMany({ user: user }, { user: userAfterUpdating });
+  }
+  return userUpdated;
 }
 
 export async function checkDuplicateEmail(email: string) {

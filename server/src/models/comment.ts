@@ -4,6 +4,7 @@ import { model, Schema } from "mongoose";
 const userSchema: Schema = new Schema({
   _id: {
     type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   email: {

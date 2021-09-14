@@ -48,3 +48,11 @@ export async function updateUserProfilePicController(
     res.status(400).json({ error: err.message });
   }
 }
+
+export async function getLoggedInUserController(
+  req: e.Express.Request,
+  res: Response
+) {
+  const user = req.user;
+  return res.json({ user });
+}

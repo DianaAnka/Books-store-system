@@ -4,6 +4,7 @@ import bookValidate from "../validation/bookValidation";
 import {
   addBook,
   ensureNotDuplicatedBook,
+  getBookById,
   searchBooks,
 } from "../services/bookService";
 import { AddBookDTO, GetBooksDTO } from "../dtoTypes/bookDTO";
@@ -17,6 +18,16 @@ export async function addBookController(req: e.Express.Request, res: Response) {
     await ensureNotDuplicatedBook(addBookDTO, user?._id);
     await addBook(addBookDTO, user?._id);
     return res.status(200).json({ meassage: "Adding book is complete" });
+  } catch (err: any) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+export async function getBookController(req: e.Express.Request, res: Response) {
+  const { id } = req.params;
+  try {
+    const book = await getBookById(id);
+    return res.json({ book });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }

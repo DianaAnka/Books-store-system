@@ -1,7 +1,6 @@
 import { IBook } from "./../types/book";
 import { model, Schema } from "mongoose";
 import { IUser } from "./../types/user";
-import { string } from "yup/lib/locale";
 
 const bookSchema: Schema = new Schema(
   {

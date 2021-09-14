@@ -33,13 +33,6 @@ export async function loginController(req: Request, res: Response) {
   }
 }
 
-export async function isLoggedInController(
-  req: e.Express.Request,
-  res: Response
-) {
-  const user = req.user;
-  return res.json({ user });
-}
 
 export function logOutController(req: Request, res: Response) {
   res.clearCookie("token");

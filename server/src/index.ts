@@ -4,20 +4,18 @@ import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoute";
-import bookRoutes from "./routes/booksRoute";
+import bookRoutes from "./routes/bookRoute";
 import userRoutes from "./routes/userRoute";
 import commentRoutes from "./routes/commentRoute";
-import ratingRoutes from "./routes/ratingRoute";
 
 const app = express();
 app.use(json());
 app.use(cookieParser());
 app.use(cors());
-app.use("/", authRoutes);
-app.use("/", bookRoutes);
-app.use("/", userRoutes);
-app.use("/", commentRoutes);
-app.use("/", ratingRoutes);
+app.use("/auth", authRoutes);
+app.use("/books", bookRoutes);
+app.use("/users", userRoutes);
+app.use("/comments", commentRoutes);
 app.use(express.static("images"));
 mongoose.connect(
   "mongodb://localhost:27017/bss",

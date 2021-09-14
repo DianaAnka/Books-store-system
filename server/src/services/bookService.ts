@@ -68,7 +68,10 @@ export async function getBooksByUserId(userBookDTO: UserBookDTO) {
 }
 
 export async function getBookById(id: ObjectId) {
-  const book = await Book.findById(id);
+  return await Book.findById(id);
+}
+
+export async function ensureBookExist(id: ObjectId) {
+  const book = await getBookById(id);
   if (!book) throw new Error("Book not found");
-  return book;
 }
