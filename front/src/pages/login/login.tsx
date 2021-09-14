@@ -35,7 +35,7 @@ const Login = () => {
     try {
       await login({ email, password });
       enqueueSnackbar("Login is complete");
-      const { user } = await (await getUser()).data;
+      const { user } =  (await getUser()).data;
       store.setUser({
         email: user.email,
         isLogged: true,

@@ -5,6 +5,7 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { useEffect, useState } from "react";
 import { addDislike, addLike, getBook } from "../services/booksService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getUser } from "../services/authService";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -169,7 +169,7 @@ const Navbar = () => {
             >
               {store.user?.isLogged ? (
                 <>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </>
               ) : (

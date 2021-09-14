@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       color: theme.palette.text.secondary,
       backgroundColor: "#e5e2e2",
-      width: "200px",
+      width: "190px",
       height: "auto",
       display: "inline-block",
       justifyContent: "center",
@@ -44,20 +44,20 @@ const BooksContainer = (props: BooksContainerProps) => {
   const matches = useMediaQuery("(min-width:500px)");
   const classes = useStyles();
 
-
   function FormRow(props: { books: GetBookDTO[] }) {
     return (
       <React.Fragment>
-        {props.books &&
+        <Grid container item lg={2}> {props.books &&
           props.books.map((book, index) => (
             <Paper
               elevation={0}
-              style={{ margin: matches ? "1% 1%" : "0 auto" }}
+              style={{ margin: matches ? "1% 15px" : "0 auto" }}
               className={classes.paper}
             >
               <BookCard book={book} />
             </Paper>
-          ))}
+          ))}</Grid>
+       
       </React.Fragment>
     );
   }
@@ -65,8 +65,8 @@ const BooksContainer = (props: BooksContainerProps) => {
     <>
       <Box display="flex" justifyContent="center">
         <div className={classes.root}>
-          <Grid container spacing={9}>
-            <Grid container item className={classes.row}>
+          <Grid container spacing={2}>
+            {/* <Grid container item className={classes.row}>
               <FormRow books={props.books.slice(0, 5)} />
             </Grid>
             <Grid container item className={classes.row}>
@@ -74,7 +74,16 @@ const BooksContainer = (props: BooksContainerProps) => {
             </Grid>
             <Grid container item className={classes.row}>
               <FormRow books={props.books.slice(10, 15)} />
-            </Grid>
+            </Grid> */}
+            {props.books.map((book) => <Grid item lg={2}>
+              <Paper
+              elevation={0}
+              style={{ margin: matches ? "1% 15px" : "0 auto" }}
+              className={classes.paper}
+            >
+              <BookCard book={book} />
+            </Paper>
+            </Grid>)}
           </Grid>
         </div>
       </Box>

@@ -19,6 +19,7 @@ const useStyles = makeStyles(() => ({
     font: "700 24px/20px 'Roboto Slab', serif",
     letterSpacing: "0.6px",
     textTransform: "uppercase",
+    paddingLeft: 35,
   },
   itemSize: {
     textTransform: "capitalize",
@@ -32,6 +33,7 @@ const useStyles = makeStyles(() => ({
     margin: "auto",
   },
   arrow: {
+    boxSizing: "unset",
     border: 0,
     WebkitTapHighlightColor: "transparent",
     width: "30px",
@@ -88,8 +90,8 @@ const PaginationContainer = (props: PaginationProps) => {
   return (
     <>
       <div className={classes.root}>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={8} md={10} lg={11} sm={5}>
+        <Grid container direction="row" alignItems="center" spacing={10}>
+          <Grid item xs={6} md={8} lg={10} sm={3}>
             <div
               className={classes.title}
               style={{ fontSize: matches ? "20px" : "30px" }}

@@ -10,7 +10,7 @@ const PublicRoute: React.FC<{
   return !store.user?.isLogged ? (
     <Route path={props.path} component={props.component} />
   ) : (
-    <Redirect to="/homePage" />
+    <Redirect to="/home-page" />
   );
 };
 export default PublicRoute;
