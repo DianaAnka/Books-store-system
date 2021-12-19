@@ -10,5 +10,5 @@ export interface IUser extends Document {
   password: string;
   profilePic: string;
   roles: [string];
-  rates: Map<string, number>;
+  rates: any;
 }

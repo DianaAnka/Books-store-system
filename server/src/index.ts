@@ -1,22 +1,29 @@
 import express from "express";
 import { json } from "body-parser";
 import mongoose from "mongoose";
-
-import withAuth from "./middlewares/withAuthMiddleware";
-
+import cors from "cors";
 import cookieParser from "cookie-parser";
-import router from "./routes";
+import authRoutes from "./routes/authRoute";
+import bookRoutes from "./routes/bookRoute";
+import userRoutes from "./routes/userRoute";
+import commentRoutes from "./routes/commentRoute";
 
 const app = express();
 app.use(json());
 app.use(cookieParser());
-app.use("/", router);
+app.use(cors());
+app.use("/auth", authRoutes);
+app.use("/books", bookRoutes);
+app.use("/users", userRoutes);
+app.use("/comments", commentRoutes);
+app.use(express.static("images"));
 mongoose.connect(
   "mongodb://localhost:27017/bss",
   {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: true,
   },
   function (err) {
     if (err) {
@@ -29,7 +36,3 @@ mongoose.connect(
     }
   }
 );
-
-app.get("/api/profile", withAuth, function (req, res) {
-  res.json({ message: "Welcome back" });
-});

@@ -6,6 +6,8 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -15,14 +17,27 @@
     "@types/react-dom": "^17.0.8",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
+    "js-cookie": "^2.2.1",
     "material-ui": "^0.20.2",
-    "mdbreact": "^5.0.2",
+    "material-ui-icons": "^1.0.0-beta.36",
+    "material-ui-search-bar": "^1.0.0",
+    "mdbreact": "^5.1.0",
+    "notistack": "^1.0.9",
     "react": "^17.0.2",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^17.0.2",
+    "react-materialui-tags": "^1.0.4",
+    "react-query": "^3.19.1",
     "react-scripts": "4.0.3",
+    "react-tag-input": "^6.7.3",
+    "react-tag-input-dnd-fix": "0.0.2",
     "react-tap-event-plugin": "^3.0.3",
     "typescript": "^4.3.4",
-    "web-vitals": "^1.1.2"
+    "use-debounce": "^7.0.0",
+    "web-vitals": "^1.1.2",
+    "yup": "^0.32.9",
+    "zustand": "^3.5.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,7 +65,10 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.0.16",
+    "@types/js-cookie": "^2.2.7",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/material-ui": "^0.21.8",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "@types/react-tag-input": "^6.1.3"
   }
 }

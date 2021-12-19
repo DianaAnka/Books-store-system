@@ -1,6 +1,21 @@
 import { IComment } from "./../types/comment";
 import { model, Schema } from "mongoose";
 
+const userSchema: Schema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  profilePic: {
+    type: String,
+  },
+});
+
 const commentSchema: Schema = new Schema(
   {
     content: {
@@ -16,17 +31,7 @@ const commentSchema: Schema = new Schema(
       default: null,
     },
     user: {
-      id: {
-        type: Number,
-        required: true,
-      },
-      name: {
-        type: String,
-        required: true,
-      },
-      profilePic: {
-        type: String,
-      },
+      type: userSchema,
       required: true,
     },
   },

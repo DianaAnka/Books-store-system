@@ -26,17 +26,15 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: [String],
     },
     rates: {
-      type: Map,
-      of: { String, Number },
+      type: Object,
+      default: {},
     },
   },
   { timestamps: true }
 );
 
 userSchema.pre("save", function (next) {
-  // Check if document is new or a new password has been set
   if (this.isNew || this.isModified("password")) {
-    // Saving reference to this because of changing scopes
     const document = this;
     hash(document.password, saltRounds, function (err, hashedPassword) {
       if (err) {
